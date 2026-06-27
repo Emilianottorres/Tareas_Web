@@ -1,0 +1,382 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Solicitud de Empleo – Práctica 6 – Validación JS</title>
+  <link href="https://fonts.googleapis.com/css2?family=Source+Serif+4:wght@400;600;700&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet"/>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+  <style>
+    :root{--paper:#f9f6f0;--cream:#efe9dd;--ink:#1a1510;--accent:#8b2020;--accent2:#a83030;--line:#c8bfb0;--muted:#7a7060;--label:#6a5a4a;--field-bg:#fff;--field-border:#b8a898}
+    *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+    body{background:#d4cfc8;font-family:'Source Serif 4',serif;color:var(--ink);padding:32px 16px 60px}
+    .document{max-width:860px;margin:0 auto;background:var(--paper);box-shadow:0 4px 32px rgba(0,0,0,.25);border:1px solid var(--line)}
+    .doc-header{background:var(--ink);color:var(--paper);display:grid;grid-template-columns:1fr auto 160px;gap:0;border-bottom:3px solid var(--accent)}
+    .doc-header .left{padding:16px 20px;border-right:1px solid #3a3028}
+    .doc-header .left h1{font-size:20px;letter-spacing:3px;text-transform:uppercase;color:#fff}
+    .doc-header .left p{font-family:'IBM Plex Mono',monospace;font-size:10px;color:#a89888;margin-top:4px;letter-spacing:1px}
+    .doc-header .center{padding:12px 18px;border-right:1px solid #3a3028;display:flex;flex-direction:column;gap:6px;min-width:210px}
+    .doc-header .right{padding:12px;display:flex;flex-direction:column;align-items:center;justify-content:center}
+    .photo-box{width:128px;height:120px;border:2px dashed #6a5a4a;display:flex;align-items:center;justify-content:center;flex-direction:column;gap:4px;color:#888;font-size:11px;font-family:'IBM Plex Mono',monospace;cursor:pointer;position:relative;overflow:hidden}
+    .photo-box img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}
+    .photo-box input[type=file]{display:none}
+    .photo-box span{font-size:24px}
+    .meta-field{display:flex;flex-direction:column;gap:2px}
+    .meta-field .meta-label{font-family:'IBM Plex Mono',monospace;font-size:9px;color:#888;text-transform:uppercase;letter-spacing:1px}
+    .meta-field input{background:transparent;border:none;border-bottom:1px solid #4a3a2a;color:#f0ece4;font-family:'IBM Plex Mono',monospace;font-size:12px;padding:2px 0;width:100%;outline:none}
+    .meta-field input::placeholder{color:#5a4a3a}
+    .puesto-row{background:var(--cream);padding:10px 20px;border-bottom:1px solid var(--line);display:grid;grid-template-columns:auto 1fr;gap:10px;align-items:center}
+    .puesto-row .puesto-label{font-family:'IBM Plex Mono',monospace;font-size:10px;color:var(--label);white-space:nowrap;text-transform:uppercase;letter-spacing:.8px}
+    .puesto-row input{background:transparent;border:none;border-bottom:1px solid var(--field-border);font-family:'Source Serif 4',serif;font-size:14px;font-weight:600;color:var(--ink);padding:2px 4px;outline:none;width:100%}
+    .section-banner{background:var(--accent);color:#fff;text-align:center;padding:5px;font-family:'IBM Plex Mono',monospace;font-size:11px;letter-spacing:3px;text-transform:uppercase}
+    table.form-table{width:100%;border-collapse:collapse}
+    table.form-table td{border:1px solid var(--line);padding:0;vertical-align:top}
+    .cell{padding:6px 10px;min-height:48px}
+    .cell-label{font-family:'IBM Plex Mono',monospace;font-size:9px;color:var(--label);text-transform:uppercase;letter-spacing:.8px;margin-bottom:3px}
+    .cell-hint{font-family:'IBM Plex Mono',monospace;font-size:8px;color:#bba;font-style:italic}
+    .cell input,.cell select,.cell textarea{width:100%;background:transparent;border:none;border-bottom:1px solid var(--field-border);font-family:'Source Serif 4',serif;font-size:13px;color:var(--ink);padding:2px 2px 4px;outline:none}
+    .cell input:focus,.cell select:focus{border-bottom-color:var(--accent2)}
+    .cell select{cursor:pointer}
+    .radio-inline{display:flex;gap:12px;flex-wrap:wrap;margin-top:4px}
+    .radio-inline label{display:flex;align-items:center;gap:5px;font-family:'IBM Plex Mono',monospace;font-size:11px;color:var(--ink);cursor:pointer}
+    .radio-inline input{accent-color:var(--accent);width:13px;height:13px}
+    .curp-cells{display:flex;gap:4px;flex-wrap:wrap;margin-top:4px}
+    .curp-cells input[type=text]{width:22px;text-align:center;border:1px solid var(--field-border)!important;border-radius:2px;font-family:'IBM Plex Mono',monospace;font-size:13px;font-weight:500;color:var(--accent);padding:3px 0!important;text-transform:uppercase}
+    .curp-divider{align-self:center;color:var(--line);font-size:14px;margin:0 2px}
+    .doc-footer{background:var(--ink);padding:12px 20px;display:flex;align-items:center;justify-content:space-between}
+    .doc-footer p{font-family:'IBM Plex Mono',monospace;font-size:10px;color:#7a6a5a;letter-spacing:1px}
+    .save-btn{background:var(--accent);color:#fff;border:none;padding:8px 24px;font-family:'IBM Plex Mono',monospace;font-size:12px;letter-spacing:1.5px;text-transform:uppercase;cursor:pointer;transition:background .2s}
+    .save-btn:hover{background:var(--accent2)}
+    .input-error{border-bottom-color:red!important;background-color:rgba(255,0,0,0.05)!important;border-color:red!important}
+  </style>
+</head>
+<body>
+
+<form id="solicitud-form" novalidate>
+<div class="document">
+
+  <!-- HEADER -->
+  <div class="doc-header">
+    <div class="left">
+      <h1>Solicitud de Empleo</h1>
+      <p>ESCOM · IPN · Práctica 6 · Validación JS + Generación PDF</p>
+    </div>
+    <div class="center">
+      <div class="meta-field">
+        <span class="meta-label">Fecha</span>
+        <input type="date" id="fecha-doc" name="fecha_doc"/>
+      </div>
+      <div class="meta-field">
+        <span class="meta-label">Sueldo mensual deseado ($)</span>
+        <input type="number" name="sueldo_deseado" placeholder="0.00"/>
+      </div>
+      <div class="meta-field">
+        <span class="meta-label">Sueldo mensual autorizado ($)</span>
+        <input type="number" name="sueldo_autorizado" placeholder="0.00"/>
+      </div>
+      <div class="meta-field">
+        <span class="meta-label">Fecha de contratación</span>
+        <input type="date" name="fecha_contratacion"/>
+      </div>
+    </div>
+    <div class="right">
+      <div class="photo-box" onclick="document.getElementById('foto-sol').click()">
+        <span>📷</span><p>Subir foto</p>
+        <input type="file" id="foto-sol" accept="image/*" onchange="setPhoto(this)"/>
+        <img id="foto-preview" src="" alt="" style="display:none"/>
+      </div>
+    </div>
+  </div>
+
+  <!-- PUESTO -->
+  <div class="puesto-row">
+    <span class="puesto-label">Puesto solicitado:</span>
+    <input type="text" name="puesto" placeholder="Escriba el puesto deseado…"/>
+  </div>
+
+  <!-- DATOS PERSONALES -->
+  <div class="section-banner">Datos Personales</div>
+  <table class="form-table"><tbody>
+    <tr>
+      <td style="width:22%"><div class="cell"><div class="cell-label">Primer Apellido</div><input type="text" name="ap1" value="Torres"/></div></td>
+      <td style="width:22%"><div class="cell"><div class="cell-label">Segundo Apellido</div><input type="text" name="ap2" value="Casas"/></div></td>
+      <td><div class="cell"><div class="cell-label">Nombre(s)</div><input type="text" name="nombres" value="Emiliano"/></div></td>
+      <td style="width:14%"><div class="cell"><div class="cell-label">Edad</div><input type="number" name="edad" min="15" max="99" placeholder="—"/></div></td>
+    </tr>
+    <tr>
+      <td colspan="2"><div class="cell"><div class="cell-label">Domicilio</div><input type="text" name="domicilio" placeholder="Calle # Número"/></div></td>
+      <td><div class="cell"><div class="cell-label">Colonia</div><input type="text" name="colonia" placeholder="Colonia"/></div></td>
+      <td><div class="cell"><div class="cell-label">Código Postal</div><input type="text" name="cp" maxlength="5" placeholder="00000"/></div></td>
+    </tr>
+    <tr>
+      <td colspan="2"><div class="cell"><div class="cell-label">Ciudad / Alcaldía, Estado</div><input type="text" name="ciudad_dom" placeholder="Alcaldía, Estado"/></div></td>
+      <td><div class="cell"><div class="cell-label">Teléfono</div><input type="tel" name="telefono" placeholder="55 0000 0000"/></div></td>
+      <td><div class="cell"><div class="cell-label">Sexo</div><div class="radio-inline"><label><input type="radio" name="sexo" value="M"/> M</label><label><input type="radio" name="sexo" value="F"/> F</label></div></div></td>
+    </tr>
+    <tr>
+      <td colspan="2"><div class="cell"><div class="cell-label">Vive con</div><input type="text" name="vive_con" placeholder="Padres"/></div></td>
+      <td><div class="cell"><div class="cell-label">Fecha de Nacimiento</div><input type="date" name="fecha_nac"/></div></td>
+      <td><div class="cell"><div class="cell-label">Nacionalidad</div><select name="nacionalidad"><option value="">—</option><option value="mex" selected>Mexicano/a</option><option value="ext">Extranjero/a</option></select></div></td>
+    </tr>
+    <tr>
+      <td colspan="2"><div class="cell"><div class="cell-label">Personas que dependen de usted</div><input type="text" name="dependientes" placeholder="Ninguna"/></div></td>
+      <td></td>
+      <td><div class="cell"><div class="cell-label">Estado Civil</div><div class="radio-inline"><label><input type="radio" name="edo_civil" value="soltero" checked/> Soltero</label><label><input type="radio" name="edo_civil" value="casado"/> Casado</label></div></div></td>
+    </tr>
+  </tbody></table>
+
+  <!-- DOCUMENTACIÓN -->
+  <div class="section-banner">Documentación</div>
+  <table class="form-table"><tbody>
+    <tr>
+      <td colspan="2"><div class="cell"><div class="cell-label">CURP</div><div class="curp-cells" id="curp-cells"></div></div></td>
+      <td colspan="2"><div class="cell"><div class="cell-label">No. de AFORE</div><input type="text" name="afore" maxlength="18" placeholder="Número de AFORE"/></div></td>
+    </tr>
+    <tr>
+      <td colspan="2"><div class="cell"><div class="cell-label">RFC</div><input type="text" name="rfc" maxlength="13" placeholder="TOCE000101XXX" style="text-transform:uppercase"/></div></td>
+      <td><div class="cell"><div class="cell-label">Licencia de Manejo</div><div class="radio-inline"><label><input type="radio" name="licencia" value="si"/> Sí</label><label><input type="radio" name="licencia" value="no" checked/> No</label></div></div></td>
+      <td><div class="cell"><div class="cell-label">Cartilla Militar No.</div><input type="text" name="cartilla" placeholder="—"/></div></td>
+    </tr>
+    <tr>
+      <td><div class="cell"><div class="cell-label">No. Seguridad Social</div><input type="text" name="nss" maxlength="11" placeholder="000-00-0000-0"/></div></td>
+      <td colspan="2"><div class="cell"><div class="cell-label">Clase y No. de Licencia</div><input type="text" name="clase_licencia" placeholder="N/A"/></div></td>
+      <td><div class="cell"><div class="cell-label">Pasaporte No.</div><input type="text" name="pasaporte" placeholder="—"/></div></td>
+    </tr>
+  </tbody></table>
+
+  <!-- FOOTER + SUBMIT -->
+  <div class="doc-footer">
+    <p>Torres Casas Emiliano · ESCOM – IPN · Práctica 6 · JS Validation + PDF</p>
+    <button type="submit" class="save-btn">SUBMIT</button>
+  </div>
+
+</div>
+</form>
+
+<script>
+/* ══════════════════════════════════════════════════════════════
+   CURP BOXES
+══════════════════════════════════════════════════════════════ */
+const curpContainer = document.getElementById('curp-cells');
+for (let i = 0; i < 18; i++) {
+  const inp = document.createElement('input');
+  inp.type = 'text'; inp.maxLength = 1; inp.name = 'curp_' + i; inp.autocomplete = 'off';
+  inp.addEventListener('input', function() {
+    this.value = this.value.toUpperCase();
+    if (this.value && this.nextElementSibling) {
+      const next = this.nextElementSibling;
+      (next.tagName === 'INPUT' ? next : next.nextElementSibling)?.focus();
+    }
+  });
+  curpContainer.appendChild(inp);
+  if ([3,5,11,12].includes(i)) {
+    const d = document.createElement('span');
+    d.className = 'curp-divider'; d.textContent = '·';
+    curpContainer.appendChild(d);
+  }
+}
+
+/* ══════════════════════════════════════════════════════════════
+   PHOTO UPLOAD
+══════════════════════════════════════════════════════════════ */
+function setPhoto(input) {
+  if (!input.files[0]) return;
+  const r = new FileReader();
+  r.onload = e => { const img = document.getElementById('foto-preview'); img.src = e.target.result; img.style.display = 'block'; };
+  r.readAsDataURL(input.files[0]);
+}
+document.getElementById('fecha-doc').value = new Date().toISOString().split('T')[0];
+
+/* ══════════════════════════════════════════════════════════════
+   VALIDACIÓN DE FORMULARIO
+   - Valida inputs vacíos
+   - Muestra alert con campos faltantes
+   - Resalta campos con error en rojo
+══════════════════════════════════════════════════════════════ */
+function validarFormulario() {
+  const campos = [
+    { name: 'fecha_doc', label: 'Fecha del documento' },
+    { name: 'sueldo_deseado', label: 'Sueldo mensual deseado' },
+    { name: 'puesto', label: 'Puesto solicitado' },
+    { name: 'ap1', label: 'Primer Apellido' },
+    { name: 'ap2', label: 'Segundo Apellido' },
+    { name: 'nombres', label: 'Nombre(s)' },
+    { name: 'edad', label: 'Edad' },
+    { name: 'domicilio', label: 'Domicilio' },
+    { name: 'colonia', label: 'Colonia' },
+    { name: 'cp', label: 'Código Postal' },
+    { name: 'ciudad_dom', label: 'Ciudad / Alcaldía' },
+    { name: 'telefono', label: 'Teléfono' },
+    { name: 'sexo', label: 'Sexo' },
+    { name: 'vive_con', label: 'Vive con' },
+    { name: 'fecha_nac', label: 'Fecha de Nacimiento' },
+    { name: 'nacionalidad', label: 'Nacionalidad' },
+    { name: 'rfc', label: 'RFC' },
+    { name: 'nss', label: 'No. Seguridad Social' },
+  ];
+
+  const vacios = [];
+
+  // Limpiar errores previos
+  document.querySelectorAll('.input-error').forEach(el => el.classList.remove('input-error'));
+
+  campos.forEach(campo => {
+    const el = document.querySelector(`[name="${campo.name}"]`);
+    if (!el) return;
+    let vacio = false;
+
+    if (el.type === 'radio') {
+      const radios = document.querySelectorAll(`[name="${campo.name}"]`);
+      if (!Array.from(radios).some(r => r.checked)) {
+        vacio = true;
+        radios.forEach(r => r.closest('.radio-inline')?.classList.add('input-error'));
+      }
+    } else if (el.tagName === 'SELECT') {
+      if (!el.value) { vacio = true; el.classList.add('input-error'); }
+    } else {
+      if (!el.value.trim()) { vacio = true; el.classList.add('input-error'); }
+    }
+
+    if (vacio) vacios.push(campo.label);
+  });
+
+  return vacios;
+}
+
+/* ══════════════════════════════════════════════════════════════
+   GENERAR PDF con jsPDF
+   - Imprime todos los datos del formulario en un PDF
+══════════════════════════════════════════════════════════════ */
+function generarPDF() {
+  const { jsPDF } = window.jspdf;
+  const doc = new jsPDF();
+
+  // Título
+  doc.setFontSize(18);
+  doc.setFont('helvetica', 'bold');
+  doc.text('SOLICITUD DE EMPLEO', 105, 20, { align: 'center' });
+
+  doc.setFontSize(10);
+  doc.setFont('helvetica', 'normal');
+  doc.text('ESCOM - IPN | Torres Casas Emiliano | Práctica 6', 105, 28, { align: 'center' });
+
+  // Línea separadora
+  doc.setDrawColor(139, 32, 32);
+  doc.setLineWidth(0.5);
+  doc.line(20, 32, 190, 32);
+
+  // Función helper para obtener valor de campo
+  function getVal(name) {
+    const el = document.querySelector(`[name="${name}"]`);
+    if (!el) return '—';
+    if (el.type === 'radio') {
+      const checked = document.querySelector(`[name="${name}"]:checked`);
+      return checked ? checked.value : '—';
+    }
+    if (el.tagName === 'SELECT') {
+      return el.options[el.selectedIndex]?.text || '—';
+    }
+    return el.value || '—';
+  }
+
+  // Obtener CURP completo
+  let curp = '';
+  for (let i = 0; i < 18; i++) {
+    const c = document.querySelector(`[name="curp_${i}"]`);
+    curp += c ? c.value : '';
+  }
+
+  let y = 42;
+  const lineH = 7;
+
+  function addSection(title) {
+    y += 4;
+    doc.setFont('helvetica', 'bold');
+    doc.setFontSize(12);
+    doc.setTextColor(139, 32, 32);
+    doc.text(title, 20, y);
+    y += 2;
+    doc.setDrawColor(139, 32, 32);
+    doc.line(20, y, 190, y);
+    y += lineH;
+    doc.setTextColor(0, 0, 0);
+    doc.setFont('helvetica', 'normal');
+    doc.setFontSize(10);
+  }
+
+  function addField(label, value) {
+    if (y > 270) { doc.addPage(); y = 20; }
+    doc.setFont('helvetica', 'bold');
+    doc.text(label + ':', 20, y);
+    doc.setFont('helvetica', 'normal');
+    doc.text(String(value), 80, y);
+    y += lineH;
+  }
+
+  // DATOS DEL DOCUMENTO
+  addSection('DATOS DEL DOCUMENTO');
+  addField('Fecha', getVal('fecha_doc'));
+  addField('Sueldo deseado', '$' + getVal('sueldo_deseado'));
+  addField('Puesto solicitado', getVal('puesto'));
+
+  // DATOS PERSONALES
+  addSection('DATOS PERSONALES');
+  addField('Nombre completo', getVal('nombres') + ' ' + getVal('ap1') + ' ' + getVal('ap2'));
+  addField('Edad', getVal('edad') + ' años');
+  addField('Domicilio', getVal('domicilio'));
+  addField('Colonia', getVal('colonia'));
+  addField('C.P.', getVal('cp'));
+  addField('Ciudad/Alcaldía', getVal('ciudad_dom'));
+  addField('Teléfono', getVal('telefono'));
+  addField('Sexo', getVal('sexo') === 'M' ? 'Masculino' : 'Femenino');
+  addField('Vive con', getVal('vive_con'));
+  addField('Fecha nacimiento', getVal('fecha_nac'));
+  addField('Nacionalidad', getVal('nacionalidad'));
+  addField('Estado civil', getVal('edo_civil'));
+  addField('Dependientes', getVal('dependientes'));
+
+  // DOCUMENTACIÓN
+  addSection('DOCUMENTACIÓN');
+  addField('CURP', curp || '—');
+  addField('RFC', getVal('rfc'));
+  addField('NSS', getVal('nss'));
+  addField('AFORE', getVal('afore'));
+  addField('Licencia', getVal('licencia') === 'si' ? 'Sí' : 'No');
+  addField('Cartilla Militar', getVal('cartilla'));
+  addField('Pasaporte', getVal('pasaporte'));
+
+  // Footer
+  y += 10;
+  doc.setFontSize(8);
+  doc.setTextColor(100, 100, 100);
+  doc.text('Documento generado automáticamente | Práctica 6 - Validación JS | ESCOM - IPN', 105, y, { align: 'center' });
+
+  // Guardar PDF
+  doc.save('SolicitudEmpleo_TorresCasas.pdf');
+}
+
+/* ══════════════════════════════════════════════════════════════
+   EVENTO SUBMIT
+   - Si hay campos vacíos: alert con la lista
+   - Si todo está completo: genera PDF
+══════════════════════════════════════════════════════════════ */
+document.getElementById('solicitud-form').addEventListener('submit', function(e) {
+  e.preventDefault();
+
+  const camposVacios = validarFormulario();
+
+  if (camposVacios.length > 0) {
+    alert(
+      '⚠️ ERROR: Los siguientes campos están vacíos:\n\n' +
+      camposVacios.map((c, i) => `  ${i+1}. ${c}`).join('\n') +
+      '\n\nPor favor complete todos los campos obligatorios.'
+    );
+  } else {
+    alert('✅ Formulario completo. Se generará el PDF con los datos ingresados.');
+    generarPDF();
+  }
+});
+</script>
+
+</body>
+</html>
