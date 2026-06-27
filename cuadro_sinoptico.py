@@ -3,165 +3,14 @@
 Cuadro Sinóptico - Unidades 1 y 2
 Tecnologías para Desarrollo de Aplicaciones Web
 ESCOM - IPN | Torres Casas Emiliano
-
-Genera un PDF en formato apaisado (landscape) con un cuadro sinóptico
-visual usando colores y estructura jerárquica con llaves.
 """
 import io
 import zlib
 import struct
-import math
-
-
-class SynopticPDF:
-    """Genera PDF landscape con cuadro sinóptico."""
-
-    def __init__(self):
-        self.objects = []
-        self.pages_info = []
-        self.obj_counter = 0
-        self.image_objs = {}
-        # Landscape letter: 792 x 612
-        self.page_w = 792
-        self.page_h = 612
-
-    def _next_obj(self):
-        self.obj_counter += 1
-        return self.obj_counter
-
-    def _add_obj(self, obj_id, content):
-        self.objects.append((obj_id, content))
-
-
-    def _load_png(self, filepath, name):
-        """Load PNG and create PDF image XObject."""
-        with open(filepath, 'rb') as f:
-            data = f.read()
-        pos = 8
-        width = height = 0
-        color_type = bit_depth = 0
-        idat_chunks = []
-        while pos < len(data):
-            length = struct.unpack('>I', data[pos:pos+4])[0]
-            chunk_type = data[pos+4:pos+8]
-            chunk_data = data[pos+8:pos+8+length]
-            pos += 12 + length
-            if chunk_type == b'IHDR':
-                width = struct.unpack('>I', chunk_data[0:4])[0]
-                height = struct.unpack('>I', chunk_data[4:8])[0]
-                bit_depth = chunk_data[8]
-                color_type = chunk_data[9]
-            elif chunk_type == b'IDAT':
-                idat_chunks.append(chunk_data)
-        compressed = b''.join(idat_chunks)
-        raw = zlib.decompress(compressed)
-        channels = 4 if color_type == 6 else 3 if color_type == 2 else 1
-        has_alpha = color_type == 6
-        stride = width * channels + 1
-        rgb_data = bytearray()
-        alpha_data = bytearray()
-        for y in range(height):
-            row_start = y * stride + 1
-            for x in range(width):
-                px_start = row_start + x * channels
-                if has_alpha:
-                    rgb_data.extend(raw[px_start:px_start+3])
-                    alpha_data.append(raw[px_start+3])
-                elif channels == 3:
-                    rgb_data.extend(raw[px_start:px_start+3])
-                else:
-                    rgb_data.append(raw[px_start])
-        rgb_compressed = zlib.compress(bytes(rgb_data), 9)
-        img_obj_id = self._next_obj()
-        smask_id = None
-        if has_alpha:
-            smask_id = self._next_obj()
-            alpha_compressed = zlib.compress(bytes(alpha_data), 9)
-            smask_content = (
-                f"{smask_id} 0 obj\n<< /Type /XObject /Subtype /Image "
-                f"/Width {width} /Height {height} /ColorSpace /DeviceGray "
-                f"/BitsPerComponent 8 /Filter /FlateDecode "
-                f"/Length {len(alpha_compressed)} >>\nstream\n"
-            ).encode() + alpha_compressed + b"\nendstream\nendobj\n"
-            self._add_obj(smask_id, smask_content)
-        smask_ref = f"/SMask {smask_id} 0 R " if smask_id else ""
-        cs = '/DeviceRGB' if channels >= 3 else '/DeviceGray'
-        img_content = (
-            f"{img_obj_id} 0 obj\n<< /Type /XObject /Subtype /Image "
-            f"/Width {width} /Height {height} /ColorSpace {cs} "
-            f"/BitsPerComponent {bit_depth} {smask_ref}"
-            f"/Filter /FlateDecode /Length {len(rgb_compressed)} >>\nstream\n"
-        ).encode() + rgb_compressed + b"\nendstream\nendobj\n"
-        self._add_obj(img_obj_id, img_content)
-        self.image_objs[name] = (img_obj_id, width, height)
-
-
-    def _make_page(self, content_lines, images_used=None):
-        """Create a landscape page."""
-        page_id = self._next_obj()
-        content_id = self._next_obj()
-        stream_text = "\n".join(content_lines)
-        stream_bytes = stream_text.encode('latin-1', errors='replace')
-        compressed = zlib.compress(stream_bytes)
-        xobject_str = ""
-        if images_used:
-            refs = " ".join(
-                f"/{name} {self.image_objs[name][0]} 0 R"
-                for name in images_used if name in self.image_objs
-            )
-            xobject_str = f"/XObject << {refs} >>"
-        page_content = (
-            f"{page_id} 0 obj\n<< /Type /Page /Parent 2 0 R "
-            f"/MediaBox [0 0 {self.page_w} {self.page_h}] "
-            f"/Contents {content_id} 0 R "
-            f"/Resources << /Font << /F1 3 0 R /F2 4 0 R /F3 5 0 R >> "
-            f"{xobject_str} >> >>\nendobj\n"
-        ).encode()
-        self._add_obj(page_id, page_content)
-        content_obj = (
-            f"{content_id} 0 obj\n<< /Filter /FlateDecode "
-            f"/Length {len(compressed)} >>\nstream\n"
-        ).encode() + compressed + b"\nendstream\nendobj\n"
-        self._add_obj(content_id, content_obj)
-        self.pages_info.append(page_id)
-
-
-    def build(self, filename):
-        """Assemble final PDF."""
-        output = io.BytesIO()
-        output.write(b"%PDF-1.4\n%\xe2\xe3\xcf\xd3\n")
-        cat_offset = output.tell()
-        output.write(b"1 0 obj\n<< /Type /Catalog /Pages 2 0 R >>\nendobj\n")
-        pages_offset = output.tell()
-        kids = " ".join(f"{pid} 0 R" for pid in self.pages_info)
-        output.write(f"2 0 obj\n<< /Type /Pages /Kids [{kids}] /Count {len(self.pages_info)} >>\nendobj\n".encode())
-        f1_offset = output.tell()
-        output.write(b"3 0 obj\n<< /Type /Font /Subtype /Type1 /BaseFont /Helvetica /Encoding /WinAnsiEncoding >>\nendobj\n")
-        f2_offset = output.tell()
-        output.write(b"4 0 obj\n<< /Type /Font /Subtype /Type1 /BaseFont /Helvetica-Bold /Encoding /WinAnsiEncoding >>\nendobj\n")
-        f3_offset = output.tell()
-        output.write(b"5 0 obj\n<< /Type /Font /Subtype /Type1 /BaseFont /Helvetica-Oblique /Encoding /WinAnsiEncoding >>\nendobj\n")
-        obj_offsets = {1: cat_offset, 2: pages_offset, 3: f1_offset, 4: f2_offset, 5: f3_offset}
-        for obj_id, content in self.objects:
-            obj_offsets[obj_id] = output.tell()
-            output.write(content)
-        xref_offset = output.tell()
-        max_obj = max(obj_offsets.keys())
-        output.write(f"xref\n0 {max_obj + 1}\n".encode())
-        output.write(b"0000000000 65535 f \n")
-        for i in range(1, max_obj + 1):
-            offset = obj_offsets.get(i, 0)
-            output.write(f"{offset:010d} 00000 n \n".encode())
-        output.write(f"trailer\n<< /Size {max_obj + 1} /Root 1 0 R >>\n".encode())
-        output.write(f"startxref\n{xref_offset}\n%%EOF\n".encode())
-        with open(filename, 'wb') as f:
-            f.write(output.getvalue())
-        print(f"PDF generado: {filename} ({len(output.getvalue())} bytes, {len(self.pages_info)} paginas)")
-
 
 
 def esc(text):
-    """Escape PDF text."""
+    """Escape PDF text with Spanish chars."""
     text = text.replace('\\', '\\\\').replace('(', '\\(').replace(')', '\\)')
     table = {
         '\u00e1': '\\341', '\u00e9': '\\351', '\u00ed': '\\355',
@@ -176,289 +25,392 @@ def esc(text):
     return text
 
 
-def text_cmd(txt, x, y, font='F1', size=9):
-    """Generate PDF text command."""
-    return f"BT /{font} {size} Tf {x:.1f} {y:.1f} Td ({esc(txt)}) Tj ET"
+def txt(s, x, y, font='F1', size=9):
+    return f"BT /{font} {size} Tf {x:.1f} {y:.1f} Td ({esc(s)}) Tj ET"
 
 
-def rect_cmd(x, y, w, h, r, g, b, fill=True):
-    """Generate colored rectangle."""
-    if fill:
-        return f"{r:.2f} {g:.2f} {b:.2f} rg {x:.1f} {y:.1f} {w:.1f} {h:.1f} re f"
-    else:
-        return f"{r:.2f} {g:.2f} {b:.2f} RG 1 w {x:.1f} {y:.1f} {w:.1f} {h:.1f} re S"
+def rect(x, y, w, h, r, g, b):
+    return f"{r:.3f} {g:.3f} {b:.3f} rg {x:.1f} {y:.1f} {w:.1f} {h:.1f} re f"
 
 
-def rounded_rect(x, y, w, h, r, g, b, radius=5):
-    """Rounded rectangle with fill."""
-    cmds = []
-    cmds.append(f"{r:.2f} {g:.2f} {b:.2f} rg")
-    # Simple approximation: rectangle + corner circles
-    cmds.append(f"{x:.1f} {y:.1f} {w:.1f} {h:.1f} re f")
+def stroke_rect(x, y, w, h, r, g, b, lw=1):
+    return f"{r:.3f} {g:.3f} {b:.3f} RG {lw} w {x:.1f} {y:.1f} {w:.1f} {h:.1f} re S"
+
+
+def line(x1, y1, x2, y2, r, g, b, lw=1):
+    return f"{r:.3f} {g:.3f} {b:.3f} RG {lw} w {x1:.1f} {y1:.1f} m {x2:.1f} {y2:.1f} l S"
+
+
+
+def brace(x, y_top, y_bot, rgb, lw=1.5):
+    """Draw a right-facing curly brace."""
+    r, g, b = rgb
+    mid = (y_top + y_bot) / 2
+    tip = x + 12
+    cmds = [
+        f"{r:.3f} {g:.3f} {b:.3f} RG {lw} w",
+        f"{x:.1f} {y_top:.1f} m {tip:.1f} {y_top:.1f} {tip:.1f} {mid:.1f} {tip:.1f} {mid:.1f} c S",
+        f"{x:.1f} {y_bot:.1f} m {tip:.1f} {y_bot:.1f} {tip:.1f} {mid:.1f} {tip:.1f} {mid:.1f} c S",
+    ]
     return "\n".join(cmds)
 
 
-def line_cmd(x1, y1, x2, y2, r, g, b, width=1):
-    """Draw a line."""
-    return f"{r:.2f} {g:.2f} {b:.2f} RG {width} w {x1:.1f} {y1:.1f} m {x2:.1f} {y2:.1f} l S"
+class PDFWriter:
+    """Simple PDF writer with correct object numbering."""
+
+    def __init__(self, page_w=792, page_h=612):
+        self.page_w = page_w
+        self.page_h = page_h
+        self.buf = io.BytesIO()
+        self.offsets = {}
+        self.obj_num = 0
+        self.page_ids = []
+
+        # Write header
+        self.buf.write(b"%PDF-1.4\n%\xe2\xe3\xcf\xd3\n")
+
+        # Reserve objects 1=Catalog, 2=Pages, 3=F1, 4=F2, 5=F3
+        self.obj_num = 5
+
+    def _write_obj_start(self, obj_id):
+        self.offsets[obj_id] = self.buf.tell()
+        self.buf.write(f"{obj_id} 0 obj\n".encode())
+
+    def _write_obj_end(self):
+        self.buf.write(b"endobj\n")
+
+    def new_obj(self):
+        self.obj_num += 1
+        return self.obj_num
+
+    def add_page(self, stream_text):
+        """Add a page with the given content stream."""
+        page_id = self.new_obj()
+        content_id = self.new_obj()
+
+        stream_bytes = stream_text.encode('latin-1', errors='replace')
+        compressed = zlib.compress(stream_bytes)
+
+        # Write content stream object
+        self._write_obj_start(content_id)
+        self.buf.write(f"<< /Length {len(compressed)} /Filter /FlateDecode >>\n".encode())
+        self.buf.write(b"stream\n")
+        self.buf.write(compressed)
+        self.buf.write(b"\nendstream\n")
+        self._write_obj_end()
+
+        # Write page object
+        self._write_obj_start(page_id)
+        self.buf.write(
+            f"<< /Type /Page /Parent 2 0 R "
+            f"/MediaBox [0 0 {self.page_w} {self.page_h}] "
+            f"/Contents {content_id} 0 R "
+            f"/Resources << /Font << /F1 3 0 R /F2 4 0 R /F3 5 0 R >> >> >>\n".encode()
+        )
+        self._write_obj_end()
+
+        self.page_ids.append(page_id)
 
 
-def brace_right(x, y_top, y_bottom, color_rgb, width=1.5):
-    """Draw a right-facing brace { using bezier curves."""
-    r, g, b = color_rgb
-    mid_y = (y_top + y_bottom) / 2
-    h = y_top - y_bottom
-    tip_x = x + 12
-    cmds = []
-    cmds.append(f"{r:.2f} {g:.2f} {b:.2f} RG {width} w")
-    # Top half curve
-    cmds.append(f"{x:.1f} {y_top:.1f} m")
-    cmds.append(f"{tip_x:.1f} {y_top:.1f} {tip_x:.1f} {mid_y:.1f} {tip_x:.1f} {mid_y:.1f} c S")
-    # Bottom half curve
-    cmds.append(f"{x:.1f} {y_bottom:.1f} m")
-    cmds.append(f"{tip_x:.1f} {y_bottom:.1f} {tip_x:.1f} {mid_y:.1f} {tip_x:.1f} {mid_y:.1f} c S")
-    return "\n".join(cmds)
+    def finish(self, filename):
+        """Write catalog, pages, fonts, xref and trailer."""
+        # Write fonts (objects 3, 4, 5)
+        self._write_obj_start(3)
+        self.buf.write(b"<< /Type /Font /Subtype /Type1 /BaseFont /Helvetica /Encoding /WinAnsiEncoding >>\n")
+        self._write_obj_end()
+
+        self._write_obj_start(4)
+        self.buf.write(b"<< /Type /Font /Subtype /Type1 /BaseFont /Helvetica-Bold /Encoding /WinAnsiEncoding >>\n")
+        self._write_obj_end()
+
+        self._write_obj_start(5)
+        self.buf.write(b"<< /Type /Font /Subtype /Type1 /BaseFont /Helvetica-Oblique /Encoding /WinAnsiEncoding >>\n")
+        self._write_obj_end()
+
+        # Write Pages (object 2)
+        kids = " ".join(f"{pid} 0 R" for pid in self.page_ids)
+        self._write_obj_start(2)
+        self.buf.write(f"<< /Type /Pages /Kids [{kids}] /Count {len(self.page_ids)} >>\n".encode())
+        self._write_obj_end()
+
+        # Write Catalog (object 1)
+        self._write_obj_start(1)
+        self.buf.write(b"<< /Type /Catalog /Pages 2 0 R >>\n")
+        self._write_obj_end()
+
+        # Write xref
+        xref_offset = self.buf.tell()
+        max_obj = max(self.offsets.keys())
+        self.buf.write(f"xref\n0 {max_obj + 1}\n".encode())
+        self.buf.write(b"0000000000 65535 f \n")
+        for i in range(1, max_obj + 1):
+            off = self.offsets.get(i, 0)
+            self.buf.write(f"{off:010d} 00000 n \n".encode())
+
+        # Trailer
+        self.buf.write(f"trailer\n<< /Size {max_obj + 1} /Root 1 0 R >>\n".encode())
+        self.buf.write(f"startxref\n{xref_offset}\n%%EOF\n".encode())
+
+        with open(filename, 'wb') as f:
+            f.write(self.buf.getvalue())
+
+        print(f"PDF: {filename} ({len(self.buf.getvalue())} bytes, {len(self.page_ids)} pages)")
 
 
 
-def create_synoptic_chart():
-    """Create the synoptic chart PDF."""
-    pdf = SynopticPDF()
+def build_page_portada():
+    """Page 1: Cover page."""
+    c = []
+    # Background decorative bar at top
+    c.append(rect(0, 570, 792, 42, 0.5, 0.0, 0.2))
+    c.append(txt("INSTITUTO POLIT\u00c9CNICO NACIONAL", 270, 585, 'F2', 14))
 
-    # Load logos
-    pdf._load_png('logo_ipn.png', 'logoIPN')
-    pdf._load_png('logo_escom.png', 'logoESCOM')
+    # Title block
+    c.append(txt("CUADRO SIN\u00d3PTICO", 280, 470, 'F2', 22))
+    c.append(txt("Unidades 1 y 2", 330, 435, 'F2', 16))
 
-    # ============================================================
-    # PAGE 1: PORTADA
-    # ============================================================
-    lines = []
-    # Logos
-    lines.append(f"q 60 0 0 80 50 500 cm /logoIPN Do Q")
-    lines.append(f"q 90 0 0 70 640 510 cm /logoESCOM Do Q")
-    # Title
-    lines.append(text_cmd("CUADRO SIN\u00d3PTICO", 260, 440, 'F2', 22))
-    lines.append(text_cmd("Unidades 1 y 2", 310, 410, 'F2', 16))
-    lines.append(text_cmd("Tecnolog\u00edas para Desarrollo de Aplicaciones Web", 200, 360, 'F2', 14))
-    lines.append(text_cmd("Torres Casas Emiliano", 310, 310, 'F1', 13))
-    lines.append(text_cmd("Cuadro Sin\u00f3ptico 1", 320, 270, 'F1', 12))
-    lines.append(text_cmd("Sandra Morales", 330, 230, 'F1', 12))
-    lines.append(text_cmd("27 de junio de 2026", 325, 180, 'F1', 12))
-    pdf._make_page(lines, images_used=['logoIPN', 'logoESCOM'])
+    c.append(txt("Tecnolog\u00edas para Desarrollo de Aplicaciones Web",
+                 210, 380, 'F2', 13))
+
+    c.append(txt("Torres Casas Emiliano", 320, 320, 'F1', 13))
+    c.append(txt("Cuadro Sin\u00f3ptico 1", 330, 285, 'F1', 12))
+    c.append(txt("Sandra Morales", 340, 250, 'F1', 12))
+    c.append(txt("27 de junio de 2026", 335, 210, 'F1', 12))
+
+    # Bottom bar
+    c.append(rect(0, 0, 792, 20, 0.0, 0.35, 0.55))
+    return "\n".join(c)
 
 
-    # ============================================================
-    # PAGE 2: CUADRO SINOPTICO - UNIDAD 1
-    # ============================================================
-    lines = []
 
-    # Colors (RGB 0-1)
-    c_main = (0.5, 0.0, 0.2)     # Maroon (main topic)
-    c_sub1 = (0.0, 0.4, 0.6)     # Teal (subtopics)
-    c_sub2 = (0.2, 0.5, 0.2)     # Green (details)
-    c_sub3 = (0.6, 0.3, 0.0)     # Orange (sub-details)
+def build_page_unit1():
+    """Page 2: Synoptic chart for Unit 1."""
+    c = []
+
+    # Colors
+    M = (0.50, 0.00, 0.20)  # Maroon - main
+    T = (0.00, 0.40, 0.60)  # Teal - subtopics
+    G = (0.15, 0.55, 0.30)  # Green - details
 
     # Title bar
-    lines.append(rounded_rect(20, 575, 752, 30, *c_main))
-    lines.append("1.0 1.0 1.0 rg")
-    lines.append(text_cmd("UNIDAD 1: Aspectos b\u00e1sicos del desarrollo de aplicaciones web", 150, 585, 'F2', 13))
-    lines.append("0 0 0 rg")
+    c.append(rect(20, 575, 752, 28, *M))
+    c.append("1 1 1 rg")
+    c.append(txt("UNIDAD 1: Aspectos b\u00e1sicos del desarrollo de aplicaciones web",
+                 160, 583, 'F2', 12))
+    c.append("0 0 0 rg")
 
-    # Main topic box (left side)
-    main_x = 30
-    main_y = 300
-    main_w = 100
-    main_h = 240
-    lines.append(rounded_rect(main_x, main_y, main_w, main_h, *c_main))
-    lines.append("1.0 1.0 1.0 rg")
-    lines.append(text_cmd("Aspectos", main_x+15, main_y+main_h-30, 'F2', 9))
-    lines.append(text_cmd("b\u00e1sicos del", main_x+10, main_y+main_h-45, 'F2', 9))
-    lines.append(text_cmd("desarrollo", main_x+15, main_y+main_h-60, 'F2', 9))
-    lines.append(text_cmd("de apps", main_x+20, main_y+main_h-75, 'F2', 9))
-    lines.append(text_cmd("web", main_x+32, main_y+main_h-90, 'F2', 9))
-    lines.append("0 0 0 rg")
+    # Main box (left)
+    mx, my, mw, mh = 30, 270, 105, 280
+    c.append(rect(mx, my, mw, mh, *M))
+    c.append("1 1 1 rg")
+    c.append(txt("Aspectos", mx+18, my+mh-40, 'F2', 10))
+    c.append(txt("b\u00e1sicos del", mx+12, my+mh-58, 'F2', 10))
+    c.append(txt("desarrollo", mx+14, my+mh-76, 'F2', 10))
+    c.append(txt("de apps web", mx+10, my+mh-94, 'F2', 10))
+    c.append("0 0 0 rg")
 
-    # Brace from main box
-    brace_x = main_x + main_w + 5
-    lines.append(brace_right(brace_x, main_y + main_h - 10, main_y + 10, c_main, 2))
+    # Main brace
+    bx = mx + mw + 3
+    c.append(brace(bx, my + mh - 15, my + 15, M, 2))
 
-    # Level 2: Four subtopics
-    subtopics = [
-        ("1.1 Evoluci\u00f3n hist\u00f3rica", [
-            "ARPANET (1969)",
-            "TCP/IP (1983)",
-            "WWW - Tim Berners-Lee (1989)",
-            "Web 1.0 -> 2.0 -> 3.0"
+    # Subtopics
+    topics = [
+        ("1.1 Evoluci\u00f3n hist\u00f3rica de Internet y la WWW", [
+            "ARPANET (1969) - Red descentralizada",
+            "TCP/IP adoptado en 1983",
+            "WWW creada por Tim Berners-Lee (1989)",
+            "HTML + URI/URL + HTTP",
+            "Web 1.0 \u2013> Web 2.0 \u2013> Web 3.0",
         ]),
-        ("1.2 Internet y WWW", [
-            "Arq. Cliente/Servidor",
-            "Protocolo TCP/IP (4 capas)",
-            "HTTP (m\u00e9todos, c\u00f3digos)",
-            "Navegadores web"
+        ("1.2 La Internet y la WWW", [
+            "Arquitectura Cliente/Servidor",
+            "TCP/IP: 4 capas (Red, Internet, Transporte, Aplicaci\u00f3n)",
+            "HTTP: M\u00e9todos GET/POST/PUT/DELETE, C\u00f3digos 1xx-5xx",
+            "HTTPS: Cifrado TLS/SSL",
+            "Navegadores: Mosaic, Netscape, Chrome, Firefox, Edge",
         ]),
-        ("1.3 Est\u00e1ndares Web", [
-            "W3C, WHATWG, IETF, ECMA",
-            "HTML5, CSS3, ES6+",
-            "WAI-ARIA (accesibilidad)"
+        ("1.3 Est\u00e1ndares para la Web", [
+            "W3C: HTML, CSS, XML, WCAG",
+            "WHATWG: HTML Living Standard",
+            "IETF: HTTP, TCP/IP, DNS",
+            "ECMA: ECMAScript (JavaScript)",
+            "HTML5, CSS3, ES6+, WAI-ARIA",
         ]),
         ("1.4 Entornos de desarrollo", [
-            "IDEs (VS Code)",
-            "Git / GitHub",
-            "Frontend/Backend",
-            "Testing y CI/CD"
+            "IDEs: VS Code, WebStorm",
+            "Control de versiones: Git, GitHub",
+            "Frontend: React, Angular, Vue, Vite",
+            "Backend: Node.js, Django, Laravel, Spring",
+            "Testing y CI/CD: Jest, Docker, GitHub Actions",
         ]),
     ]
 
-    sub_x = brace_x + 20
-    sub_w = 155
-    sub_h_each = 52
+    sx = bx + 18
+    sw = 175
+    n = len(topics)
+    each_h = 62
     gap = 6
-    total_h = len(subtopics) * sub_h_each + (len(subtopics)-1) * gap
-    start_y = main_y + (main_h - total_h) / 2
+    total = n * each_h + (n - 1) * gap
+    base_y = my + (mh - total) / 2
 
-    for i, (title, details) in enumerate(subtopics):
-        sy = start_y + (len(subtopics) - 1 - i) * (sub_h_each + gap)
+    for i, (title, details) in enumerate(topics):
+        # Position from top to bottom (reverse for PDF coords)
+        sy = base_y + (n - 1 - i) * (each_h + gap)
 
         # Subtopic box
-        lines.append(rounded_rect(sub_x, sy, sub_w, sub_h_each, *c_sub1))
-        lines.append("1.0 1.0 1.0 rg")
-        lines.append(text_cmd(title, sub_x + 8, sy + sub_h_each - 15, 'F2', 8))
-        lines.append("0 0 0 rg")
+        c.append(rect(sx, sy, sw, each_h, *T))
+        c.append("1 1 1 rg")
+        c.append(txt(title, sx + 5, sy + each_h - 13, 'F2', 7))
+        c.append("0 0 0 rg")
 
-        # Connector line from main brace to subtopic
-        conn_y = sy + sub_h_each / 2
-        lines.append(line_cmd(brace_x + 12, conn_y, sub_x, conn_y, *c_main, 1))
+        # Connector line
+        mid_y = sy + each_h / 2
+        c.append(line(bx + 12, mid_y, sx, mid_y, *M, 1))
 
-        # Brace from subtopic to details
-        detail_brace_x = sub_x + sub_w + 3
-        detail_top = sy + sub_h_each - 5
-        detail_bot = sy + 5
-        lines.append(brace_right(detail_brace_x, detail_top, detail_bot, c_sub1, 1.5))
+        # Brace from subtopic
+        dbx = sx + sw + 3
+        c.append(brace(dbx, sy + each_h - 5, sy + 5, T, 1.2))
 
-        # Detail items
-        detail_x = detail_brace_x + 18
-        detail_start_y = sy + sub_h_each - 12
-        line_spacing = sub_h_each / (len(details) + 1)
+        # Detail boxes
+        dx = dbx + 16
+        dw = 230
+        n_d = len(details)
+        d_spacing = each_h / (n_d + 0.5)
 
         for j, detail in enumerate(details):
-            dy = detail_start_y - (j + 0.5) * line_spacing
-            # Small colored bullet box
-            lines.append(rounded_rect(detail_x, dy - 3, 180, 12, *c_sub2))
-            lines.append("1.0 1.0 1.0 rg")
-            lines.append(text_cmd(detail, detail_x + 4, dy - 1, 'F1', 7))
-            lines.append("0 0 0 rg")
+            dy = sy + each_h - 10 - (j + 0.5) * d_spacing
+            c.append(rect(dx, dy - 2, dw, 10, *G))
+            c.append("1 1 1 rg")
+            c.append(txt(detail, dx + 3, dy, 'F1', 6.5))
+            c.append("0 0 0 rg")
 
-    pdf._make_page(lines)
+    # Footer
+    c.append(rect(0, 0, 792, 12, *M))
+    c.append("1 1 1 rg")
+    c.append(txt("Torres Casas Emiliano | ESCOM - IPN | Tecnolog\u00edas para Desarrollo de Aplicaciones Web",
+                 220, 2, 'F1', 7))
+    c.append("0 0 0 rg")
+    return "\n".join(c)
 
 
-    # ============================================================
-    # PAGE 3: CUADRO SINOPTICO - UNIDAD 2
-    # ============================================================
-    lines = []
+
+def build_page_unit2():
+    """Page 3: Synoptic chart for Unit 2."""
+    c = []
 
     # Colors for Unit 2
-    c_main2 = (0.0, 0.35, 0.55)   # Dark blue
-    c_sub2a = (0.6, 0.1, 0.4)     # Purple
-    c_sub2b = (0.1, 0.5, 0.4)     # Teal-green
-    c_sub2c = (0.7, 0.4, 0.0)     # Dark orange
+    M = (0.00, 0.35, 0.55)  # Dark blue - main
+    T = (0.55, 0.10, 0.40)  # Purple - subtopics
+    G = (0.10, 0.50, 0.40)  # Teal-green - details
 
     # Title bar
-    lines.append(rounded_rect(20, 575, 752, 30, *c_main2))
-    lines.append("1.0 1.0 1.0 rg")
-    lines.append(text_cmd("UNIDAD 2: P\u00e1ginas Web con HTML", 250, 585, 'F2', 13))
-    lines.append("0 0 0 rg")
+    c.append(rect(20, 575, 752, 28, *M))
+    c.append("1 1 1 rg")
+    c.append(txt("UNIDAD 2: P\u00e1ginas Web con HTML", 270, 583, 'F2', 12))
+    c.append("0 0 0 rg")
 
-    # Main topic box
-    main_x = 30
-    main_y = 280
-    main_w = 100
-    main_h = 270
-    lines.append(rounded_rect(main_x, main_y, main_w, main_h, *c_main2))
-    lines.append("1.0 1.0 1.0 rg")
-    lines.append(text_cmd("P\u00e1ginas", main_x+20, main_y+main_h-30, 'F2', 9))
-    lines.append(text_cmd("Web con", main_x+20, main_y+main_h-45, 'F2', 9))
-    lines.append(text_cmd("HTML", main_x+28, main_y+main_h-60, 'F2', 9))
-    lines.append("0 0 0 rg")
+    # Main box
+    mx, my, mw, mh = 30, 250, 105, 300
+    c.append(rect(mx, my, mw, mh, *M))
+    c.append("1 1 1 rg")
+    c.append(txt("P\u00e1ginas", mx+22, my+mh-40, 'F2', 10))
+    c.append(txt("Web con", mx+22, my+mh-58, 'F2', 10))
+    c.append(txt("HTML", mx+30, my+mh-76, 'F2', 10))
+    c.append("0 0 0 rg")
 
-    # Brace
-    brace_x = main_x + main_w + 5
-    lines.append(brace_right(brace_x, main_y + main_h - 10, main_y + 10, c_main2, 2))
+    # Main brace
+    bx = mx + mw + 3
+    c.append(brace(bx, my + mh - 15, my + 15, M, 2))
 
-    # Level 2: Five subtopics for Unit 2
-    subtopics2 = [
-        ("2.1 Evoluci\u00f3n de HTML", [
-            "HTML 1.0 a HTML5",
-            "XHTML, HTML Living Standard",
-            "Nuevas APIs y elementos"
+    # Subtopics Unit 2
+    topics = [
+        ("2.1 Evoluci\u00f3n del lenguaje HTML", [
+            "HTML 1.0 (1991) - Estructura b\u00e1sica",
+            "HTML 2.0 - 4.01: Formularios, tablas, CSS",
+            "XHTML: Sintaxis estricta basada en XML",
+            "HTML5 (2014): Sem\u00e1ntica, multimedia, APIs",
         ]),
-        ("2.2 Estructura documento", [
-            "<!DOCTYPE html>",
-            "<html>, <head>, <body>",
-            "Meta tags, t\u00edtulo, enlaces"
+        ("2.2 Estructura de un documento HTML", [
+            "<!DOCTYPE html> - Declaraci\u00f3n del tipo",
+            "<html>, <head>, <body> - Estructura ra\u00edz",
+            "<meta>: charset, viewport, description",
+            "<title>, <link>, <script> en head",
         ]),
         ("2.3 Elementos de HTML", [
-            "Encabezados, p\u00e1rrafos, listas",
-            "Enlaces e im\u00e1genes",
-            "Sem\u00e1ntica: header, nav, section",
-            "Audio, video, canvas"
+            "Encabezados: h1-h6, P\u00e1rrafos: <p>",
+            "Listas: <ul>, <ol>, <li>, <dl>",
+            "Enlaces: <a href>, Im\u00e1genes: <img src>",
+            "Sem\u00e1nticos: <header>, <nav>, <section>, <article>",
+            "Multimedia: <audio>, <video>, <canvas>",
         ]),
-        ("2.4 Tablas y formularios", [
-            "table, tr, th, td",
-            "form, input, select, textarea",
-            "Validaci\u00f3n de formularios",
-            "Tipos de input HTML5"
+        ("2.4 Tablas, contenedores y formularios", [
+            "Tablas: <table>, <tr>, <th>, <td>, <thead>, <tbody>",
+            "Contenedores: <div>, <span>, <figure>",
+            "Forms: <form>, <input>, <select>, <textarea>",
+            "Input types HTML5: email, date, range, color",
+            "Validaci\u00f3n: required, pattern, min/max",
         ]),
-        ("2.5 Archivos HTML est\u00e1ticos", [
-            "Creaci\u00f3n y estructura",
-            "Buenas pr\u00e1cticas",
-            "Publicaci\u00f3n en servidor"
+        ("2.5 Creaci\u00f3n de archivos HTML est\u00e1ticos", [
+            "Estructura b\u00e1sica de un archivo .html",
+            "Buenas pr\u00e1cticas: indentaci\u00f3n, sem\u00e1ntica",
+            "Enlace de CSS y JS externos",
+            "Publicaci\u00f3n en servidor web",
         ]),
     ]
 
-    sub_x = brace_x + 20
-    sub_w = 160
-    sub_h_each = 48
-    gap = 5
-    total_h = len(subtopics2) * sub_h_each + (len(subtopics2)-1) * gap
-    start_y = main_y + (main_h - total_h) / 2
+    sx = bx + 18
+    sw = 185
+    n = len(topics)
+    each_h = 55
+    gap = 4
+    total = n * each_h + (n - 1) * gap
+    base_y = my + (mh - total) / 2
 
-    for i, (title, details) in enumerate(subtopics2):
-        sy = start_y + (len(subtopics2) - 1 - i) * (sub_h_each + gap)
+    for i, (title, details) in enumerate(topics):
+        sy = base_y + (n - 1 - i) * (each_h + gap)
 
-        # Subtopic box
-        lines.append(rounded_rect(sub_x, sy, sub_w, sub_h_each, *c_sub2a))
-        lines.append("1.0 1.0 1.0 rg")
-        lines.append(text_cmd(title, sub_x + 8, sy + sub_h_each - 15, 'F2', 8))
-        lines.append("0 0 0 rg")
+        c.append(rect(sx, sy, sw, each_h, *T))
+        c.append("1 1 1 rg")
+        c.append(txt(title, sx + 5, sy + each_h - 13, 'F2', 7))
+        c.append("0 0 0 rg")
 
-        # Connector
-        conn_y = sy + sub_h_each / 2
-        lines.append(line_cmd(brace_x + 12, conn_y, sub_x, conn_y, *c_main2, 1))
+        mid_y = sy + each_h / 2
+        c.append(line(bx + 12, mid_y, sx, mid_y, *M, 1))
 
-        # Brace to details
-        detail_brace_x = sub_x + sub_w + 3
-        detail_top = sy + sub_h_each - 5
-        detail_bot = sy + 5
-        lines.append(brace_right(detail_brace_x, detail_top, detail_bot, c_sub2a, 1.5))
+        dbx = sx + sw + 3
+        c.append(brace(dbx, sy + each_h - 5, sy + 5, T, 1.2))
 
-        # Details
-        detail_x = detail_brace_x + 18
-        detail_start_y = sy + sub_h_each - 10
-        line_spacing = sub_h_each / (len(details) + 1)
+        dx = dbx + 16
+        dw = 220
+        n_d = len(details)
+        d_spacing = each_h / (n_d + 0.5)
 
         for j, detail in enumerate(details):
-            dy = detail_start_y - (j + 0.5) * line_spacing
-            lines.append(rounded_rect(detail_x, dy - 3, 195, 11, *c_sub2b))
-            lines.append("1.0 1.0 1.0 rg")
-            lines.append(text_cmd(detail, detail_x + 4, dy - 1, 'F1', 7))
-            lines.append("0 0 0 rg")
+            dy = sy + each_h - 10 - (j + 0.5) * d_spacing
+            c.append(rect(dx, dy - 2, dw, 10, *G))
+            c.append("1 1 1 rg")
+            c.append(txt(detail, dx + 3, dy, 'F1', 6.2))
+            c.append("0 0 0 rg")
 
-    pdf._make_page(lines)
+    # Footer
+    c.append(rect(0, 0, 792, 12, *M))
+    c.append("1 1 1 rg")
+    c.append(txt("Torres Casas Emiliano | ESCOM - IPN | Tecnolog\u00edas para Desarrollo de Aplicaciones Web",
+                 220, 2, 'F1', 7))
+    c.append("0 0 0 rg")
+    return "\n".join(c)
 
 
-    # Build PDF
-    pdf.build("MapaMental-Emiliano-Torres.pdf")
+
+def main():
+    pdf = PDFWriter(page_w=792, page_h=612)  # Landscape
+
+    pdf.add_page(build_page_portada())
+    pdf.add_page(build_page_unit1())
+    pdf.add_page(build_page_unit2())
+
+    pdf.finish("MapaMental-Emiliano-Torres.pdf")
 
 
 if __name__ == "__main__":
-    create_synoptic_chart()
+    main()
