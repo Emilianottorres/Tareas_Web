@@ -1,0 +1,285 @@
+%PDF-1.4
+%‚„œ”
+1 0 obj
+<< /Type /Catalog /Pages 2 0 R >>
+endobj
+2 0 obj
+<< /Type /Pages /Kids [6 0 R 8 0 R 10 0 R 12 0 R 14 0 R 16 0 R 18 0 R] /Count 7 >>
+endobj
+3 0 obj
+<< /Type /Font /Subtype /Type1 /BaseFont /Helvetica /Encoding /WinAnsiEncoding >>
+endobj
+4 0 obj
+<< /Type /Font /Subtype /Type1 /BaseFont /Helvetica-Bold /Encoding /WinAnsiEncoding >>
+endobj
+5 0 obj
+<< /Type /Font /Subtype /Type1 /BaseFont /Helvetica-Oblique /Encoding /WinAnsiEncoding >>
+endobj
+6 0 obj
+<< /Type /Page /Parent 2 0 R /MediaBox [0 0 612 792] /Contents 7 0 R /Resources << /Font << /regularFont 3 0 R /boldFont 4 0 R /italicFont 5 0 R >> >> >>
+endobj
+7 0 obj
+<< /Length 646 >>
+stream
+BT /boldFont 10 Tf 231.0 722.0 Td (INSTITUTO POLIT\311CNICO NACIONAL) Tj ET
+BT /boldFont 10 Tf 238.5 708.0 Td (ESCUELA SUPERIOR DE C\323MPUTO) Tj ET
+BT /boldFont 20 Tf 226.0 628.0 Td (RESUMEN UNIDAD 1) Tj ET
+BT /boldFont 13 Tf 153.2 576.0 Td (Tecnolog\355as para Desarrollo de Aplicaciones Web) Tj ET
+BT /regularFont 12 Tf 243.0 534.0 Td (Torres Casas Emiliano) Tj ET
+BT /regularFont 12 Tf 186.0 492.0 Td (Resumen: Aspectos b\341sicos del desarrollo) Tj ET
+BT /regularFont 12 Tf 249.0 478.0 Td (de aplicaciones web) Tj ET
+BT /regularFont 12 Tf 264.0 436.0 Td (Sandra Morales) Tj ET
+BT /regularFont 12 Tf 249.0 394.0 Td (27 de junio de 2026) Tj ET
+endstream
+endobj
+8 0 obj
+<< /Type /Page /Parent 2 0 R /MediaBox [0 0 612 792] /Contents 9 0 R /Resources << /Font << /regularFont 3 0 R /boldFont 4 0 R /italicFont 5 0 R >> >> >>
+endobj
+9 0 obj
+<< /Length 759 >>
+stream
+BT /boldFont 16 Tf 282.0 740.0 Td (\315NDICE) Tj ET
+BT /regularFont 11 Tf 72.0 702.0 Td (1. Evoluci\363n hist\363rica de Internet y la WWW) Tj ET
+BT /regularFont 11 Tf 72.0 684.0 Td (2. La Internet y la WWW) Tj ET
+BT /regularFont 11 Tf 72.0 666.0 Td (2.1 Arquitectura Cliente/Servidor) Tj ET
+BT /regularFont 11 Tf 72.0 648.0 Td (2.2 Protocolo TCP/IP) Tj ET
+BT /regularFont 11 Tf 72.0 630.0 Td (2.3 Protocolo de Transferencia de Hipertexto \(HTTP\)) Tj ET
+BT /regularFont 11 Tf 72.0 612.0 Td (2.4 Evoluci\363n de Navegadores Web) Tj ET
+BT /regularFont 11 Tf 72.0 594.0 Td (3. Est\341ndares para la Web) Tj ET
+BT /regularFont 11 Tf 72.0 576.0 Td (4. Entornos de desarrollo para Aplicaciones Web) Tj ET
+BT /regularFont 11 Tf 72.0 558.0 Td (5. Conclusiones) Tj ET
+endstream
+endobj
+10 0 obj
+<< /Type /Page /Parent 2 0 R /MediaBox [0 0 612 792] /Contents 11 0 R /Resources << /Font << /regularFont 3 0 R /boldFont 4 0 R /italicFont 5 0 R >> >> >>
+endobj
+11 0 obj
+<< /Length 4276 >>
+stream
+BT /boldFont 14 Tf 72.0 742.0 Td (1. Evoluci\363n hist\363rica de Internet y la WWW) Tj ET
+BT /regularFont 11 Tf 72.0 717.0 Td (Internet tiene sus or\355genes en ARPANET, una red creada en 1969 por el Departamento de) Tj ET
+BT /regularFont 11 Tf 72.0 703.0 Td (Defensa de los Estados Unidos con el fin de interconectar universidades e instituciones) Tj ET
+BT /regularFont 11 Tf 72.0 689.0 Td (de investigaci\363n. El objetivo principal era crear una red descentralizada capaz de) Tj ET
+BT /regularFont 11 Tf 72.0 675.0 Td (resistir fallos parciales.) Tj ET
+BT /regularFont 11 Tf 72.0 657.0 Td (En 1983, se adopt\363 el protocolo TCP/IP como est\341ndar de comunicaci\363n, lo que permiti\363 la) Tj ET
+BT /regularFont 11 Tf 72.0 643.0 Td (interconexi\363n de redes heterog\351neas y marc\363 el nacimiento formal de Internet tal como la) Tj ET
+BT /regularFont 11 Tf 72.0 629.0 Td (conocemos.) Tj ET
+BT /regularFont 11 Tf 72.0 611.0 Td (La World Wide Web \(WWW\) fue inventada por Tim Berners-Lee en 1989 en el CERN) Tj ET
+BT /regularFont 11 Tf 72.0 597.0 Td (\(Organizaci\363n Europea para la Investigaci\363n Nuclear\). Su propuesta combinaba tres) Tj ET
+BT /regularFont 11 Tf 72.0 583.0 Td (tecnolog\355as fundamentales:) Tj ET
+BT /regularFont 11 Tf 92.0 565.0 Td (\267 HTML \(HyperText Markup Language\): lenguaje de marcado para crear documentos.) Tj ET
+BT /regularFont 11 Tf 92.0 547.0 Td (\267 URI/URL \(Uniform Resource Identifier/Locator\): sistema de direccionamiento \372nico.) Tj ET
+BT /regularFont 11 Tf 92.0 529.0 Td (\267 HTTP \(HyperText Transfer Protocol\): protocolo de transferencia de hipertexto.) Tj ET
+BT /regularFont 11 Tf 72.0 511.0 Td (En 1991 se public\363 la primera p\341gina web, y en 1993 el navegador Mosaic populariz\363 el) Tj ET
+BT /regularFont 11 Tf 72.0 497.0 Td (acceso gr\341fico a la Web. Desde entonces, la Web ha evolucionado desde p\341ginas est\341ticas) Tj ET
+BT /regularFont 11 Tf 72.0 483.0 Td (\(Web 1.0\) hasta aplicaciones interactivas y colaborativas \(Web 2.0\), y actualmente hacia) Tj ET
+BT /regularFont 11 Tf 72.0 469.0 Td (la Web sem\341ntica e inteligente \(Web 3.0\).) Tj ET
+BT /boldFont 14 Tf 72.0 443.0 Td (2. La Internet y la WWW) Tj ET
+BT /boldFont 12 Tf 72.0 419.0 Td (2.1 Arquitectura Cliente/Servidor) Tj ET
+BT /regularFont 11 Tf 72.0 403.0 Td (La arquitectura Cliente/Servidor es el modelo fundamental sobre el que operan las) Tj ET
+BT /regularFont 11 Tf 72.0 389.0 Td (aplicaciones web. En este modelo:) Tj ET
+BT /regularFont 11 Tf 92.0 371.0 Td (\267 Cliente: Es el programa \(generalmente un navegador web\) que realiza peticiones de) Tj ET
+BT /regularFont 11 Tf 92.0 357.0 Td (recursos o servicios. El cliente inicia la comunicaci\363n y presenta la informaci\363n al) Tj ET
+BT /regularFont 11 Tf 92.0 343.0 Td (usuario.) Tj ET
+BT /regularFont 11 Tf 92.0 325.0 Td (\267 Servidor: Es el programa que espera y responde a las peticiones de los clientes.) Tj ET
+BT /regularFont 11 Tf 92.0 311.0 Td (Proporciona recursos, procesa datos y ejecuta la l\363gica de negocio.) Tj ET
+BT /regularFont 11 Tf 72.0 293.0 Td (Caracter\355sticas principales:) Tj ET
+BT /regularFont 11 Tf 92.0 275.0 Td (1. El cliente inicia las solicitudes \(requests\).) Tj ET
+BT /regularFont 11 Tf 92.0 257.0 Td (2. El servidor est\341 en espera permanente de peticiones.) Tj ET
+BT /regularFont 11 Tf 92.0 239.0 Td (3. La comunicaci\363n es de tipo solicitud-respuesta.) Tj ET
+BT /regularFont 11 Tf 92.0 221.0 Td (4. Los roles son asim\351tricos: el cliente solicita y el servidor provee.) Tj ET
+BT /regularFont 11 Tf 92.0 203.0 Td (5. Es un modelo escalable: un servidor puede atender m\372ltiples clientes.) Tj ET
+BT /regularFont 11 Tf 72.0 185.0 Td (En el contexto web, el navegador act\372a como cliente, enviando peticiones HTTP al) Tj ET
+BT /regularFont 11 Tf 72.0 171.0 Td (servidor web, el cual responde con documentos HTML, im\341genes, datos JSON, entre otros) Tj ET
+BT /regularFont 11 Tf 72.0 157.0 Td (recursos.) Tj ET
+BT /boldFont 12 Tf 72.0 133.0 Td (2.2 Protocolo TCP/IP) Tj ET
+BT /regularFont 11 Tf 72.0 117.0 Td (TCP/IP \(Transmission Control Protocol / Internet Protocol\) es la suite de protocolos que) Tj ET
+BT /regularFont 11 Tf 72.0 103.0 Td (permite la comunicaci\363n en Internet. Se organiza en cuatro capas:) Tj ET
+endstream
+endobj
+12 0 obj
+<< /Type /Page /Parent 2 0 R /MediaBox [0 0 612 792] /Contents 13 0 R /Resources << /Font << /regularFont 3 0 R /boldFont 4 0 R /italicFont 5 0 R >> >> >>
+endobj
+13 0 obj
+<< /Length 4010 >>
+stream
+BT /regularFont 11 Tf 92.0 750.0 Td (1. Capa de Acceso a Red: Maneja la transmisi\363n f\355sica de datos \(Ethernet, Wi-Fi\).) Tj ET
+BT /regularFont 11 Tf 92.0 732.0 Td (2. Capa de Internet \(IP\): Se encarga del direccionamiento l\363gico y el enrutamiento) Tj ET
+BT /regularFont 11 Tf 92.0 718.0 Td (de paquetes. Cada dispositivo tiene una direcci\363n IP \372nica.) Tj ET
+BT /regularFont 11 Tf 92.0 700.0 Td (3. Capa de Transporte \(TCP/UDP\): TCP es orientado a conexi\363n, garantiza la entrega) Tj ET
+BT /regularFont 11 Tf 92.0 686.0 Td (ordenada y sin errores de los datos mediante el mecanismo three-way handshake \(SYN,) Tj ET
+BT /regularFont 11 Tf 92.0 672.0 Td (SYN-ACK, ACK\). UDP es sin conexi\363n, m\341s r\341pido pero sin garant\355a de entrega.) Tj ET
+BT /regularFont 11 Tf 92.0 654.0 Td (4. Capa de Aplicaci\363n: Protocolos de alto nivel como HTTP, FTP, SMTP, DNS.) Tj ET
+BT /regularFont 11 Tf 72.0 636.0 Td (Conceptos clave:) Tj ET
+BT /regularFont 11 Tf 92.0 618.0 Td (\267 Direcci\363n IP: Identificador num\351rico \372nico \(IPv4: 32 bits, IPv6: 128 bits\).) Tj ET
+BT /regularFont 11 Tf 92.0 600.0 Td (\267 Puerto: N\372mero que identifica un servicio espec\355fico \(HTTP: 80, HTTPS: 443\).) Tj ET
+BT /regularFont 11 Tf 92.0 582.0 Td (\267 DNS: Sistema que traduce nombres de dominio a direcciones IP.) Tj ET
+BT /boldFont 12 Tf 72.0 558.0 Td (2.3 Protocolo de Transferencia de Hipertexto \(HTTP\)) Tj ET
+BT /regularFont 11 Tf 72.0 542.0 Td (HTTP es el protocolo de la capa de aplicaci\363n que permite la comunicaci\363n entre clientes) Tj ET
+BT /regularFont 11 Tf 72.0 528.0 Td (y servidores web. Es un protocolo sin estado \(stateless\), lo que significa que cada) Tj ET
+BT /regularFont 11 Tf 72.0 514.0 Td (petici\363n es independiente.) Tj ET
+BT /regularFont 11 Tf 72.0 496.0 Td (Estructura de una petici\363n HTTP:) Tj ET
+BT /regularFont 11 Tf 92.0 478.0 Td (\267 L\355nea de petici\363n: m\351todo + URI + versi\363n \(ej: GET /index.html HTTP/1.1\)) Tj ET
+BT /regularFont 11 Tf 92.0 460.0 Td (\267 Cabeceras \(Headers\): metadatos de la petici\363n.) Tj ET
+BT /regularFont 11 Tf 92.0 442.0 Td (\267 Cuerpo \(Body\): datos enviados \(en POST, PUT, etc.\)) Tj ET
+BT /regularFont 11 Tf 72.0 424.0 Td (M\351todos HTTP principales:) Tj ET
+BT /regularFont 11 Tf 92.0 406.0 Td (\267 GET: Solicita un recurso \(solo lectura\).) Tj ET
+BT /regularFont 11 Tf 92.0 388.0 Td (\267 POST: Env\355a datos al servidor para crear un recurso.) Tj ET
+BT /regularFont 11 Tf 92.0 370.0 Td (\267 PUT: Actualiza un recurso existente completamente.) Tj ET
+BT /regularFont 11 Tf 92.0 352.0 Td (\267 DELETE: Elimina un recurso.) Tj ET
+BT /regularFont 11 Tf 92.0 334.0 Td (\267 PATCH: Actualiza parcialmente un recurso.) Tj ET
+BT /regularFont 11 Tf 72.0 316.0 Td (C\363digos de respuesta HTTP:) Tj ET
+BT /regularFont 11 Tf 92.0 298.0 Td (\267 1xx: Informativo.) Tj ET
+BT /regularFont 11 Tf 92.0 280.0 Td (\267 2xx: \311xito \(200 OK, 201 Created\).) Tj ET
+BT /regularFont 11 Tf 92.0 262.0 Td (\267 3xx: Redirecci\363n \(301, 302\).) Tj ET
+BT /regularFont 11 Tf 92.0 244.0 Td (\267 4xx: Error del cliente \(400 Bad Request, 404 Not Found\).) Tj ET
+BT /regularFont 11 Tf 92.0 226.0 Td (\267 5xx: Error del servidor \(500 Internal Server Error\).) Tj ET
+BT /regularFont 11 Tf 72.0 208.0 Td (HTTPS es la versi\363n segura de HTTP que utiliza cifrado TLS/SSL para proteger la) Tj ET
+BT /regularFont 11 Tf 72.0 194.0 Td (comunicaci\363n.) Tj ET
+BT /boldFont 12 Tf 72.0 170.0 Td (2.4 Evoluci\363n de Navegadores Web) Tj ET
+BT /regularFont 11 Tf 72.0 154.0 Td (Los navegadores web han sido fundamentales en la evoluci\363n de las aplicaciones web:) Tj ET
+BT /regularFont 11 Tf 92.0 136.0 Td (\267 1990 - WorldWideWeb: Primer navegador creado por Tim Berners-Lee, solo texto.) Tj ET
+BT /regularFont 11 Tf 92.0 118.0 Td (\267 1993 - Mosaic: Primer navegador gr\341fico popular, desarrollado en NCSA.) Tj ET
+BT /regularFont 11 Tf 92.0 100.0 Td (\267 1994 - Netscape Navigator: Domin\363 el mercado en los 90s.) Tj ET
+endstream
+endobj
+14 0 obj
+<< /Type /Page /Parent 2 0 R /MediaBox [0 0 612 792] /Contents 15 0 R /Resources << /Font << /regularFont 3 0 R /boldFont 4 0 R /italicFont 5 0 R >> >> >>
+endobj
+15 0 obj
+<< /Length 3916 >>
+stream
+BT /regularFont 11 Tf 92.0 750.0 Td (\267 1995 - Internet Explorer: Microsoft entr\363 al mercado, iniciando la Guerra de los) Tj ET
+BT /regularFont 11 Tf 92.0 736.0 Td (Navegadores.) Tj ET
+BT /regularFont 11 Tf 92.0 718.0 Td (\267 2004 - Mozilla Firefox: Navegador de c\363digo abierto que promovi\363 est\341ndares web.) Tj ET
+BT /regularFont 11 Tf 92.0 700.0 Td (\267 2008 - Google Chrome: Introdujo el motor V8 de JavaScript, revolucionando el) Tj ET
+BT /regularFont 11 Tf 92.0 686.0 Td (rendimiento.) Tj ET
+BT /regularFont 11 Tf 92.0 668.0 Td (\267 2015 - Microsoft Edge: Reemplazo de IE, posteriormente migrado a Chromium.) Tj ET
+BT /regularFont 11 Tf 72.0 650.0 Td (Componentes principales de un navegador moderno:) Tj ET
+BT /regularFont 11 Tf 92.0 632.0 Td (1. Motor de renderizado \(Blink, WebKit, Gecko\).) Tj ET
+BT /regularFont 11 Tf 92.0 614.0 Td (2. Motor de JavaScript \(V8, SpiderMonkey, JavaScriptCore\).) Tj ET
+BT /regularFont 11 Tf 92.0 596.0 Td (3. Capa de red para peticiones HTTP.) Tj ET
+BT /regularFont 11 Tf 92.0 578.0 Td (4. Int\351rprete de HTML/CSS.) Tj ET
+BT /regularFont 11 Tf 92.0 560.0 Td (5. Herramientas de desarrollo integradas.) Tj ET
+BT /boldFont 14 Tf 72.0 534.0 Td (3. Est\341ndares para la Web) Tj ET
+BT /regularFont 11 Tf 72.0 516.0 Td (Los est\341ndares web son especificaciones t\351cnicas que definen c\363mo deben funcionar las) Tj ET
+BT /regularFont 11 Tf 72.0 502.0 Td (tecnolog\355as web. Son desarrollados principalmente por:) Tj ET
+BT /regularFont 11 Tf 92.0 484.0 Td (\267 W3C \(World Wide Web Consortium\): Fundado por Tim Berners-Lee, define est\341ndares) Tj ET
+BT /regularFont 11 Tf 92.0 470.0 Td (para HTML, CSS, XML, accesibilidad \(WCAG\), entre otros.) Tj ET
+BT /regularFont 11 Tf 92.0 452.0 Td (\267 WHATWG \(Web Hypertext Application Technology Working Group\): Mantiene el est\341ndar) Tj ET
+BT /regularFont 11 Tf 92.0 438.0 Td (vivo de HTML \(HTML Living Standard\).) Tj ET
+BT /regularFont 11 Tf 92.0 420.0 Td (\267 IETF \(Internet Engineering Task Force\): Define protocolos de Internet como HTTP,) Tj ET
+BT /regularFont 11 Tf 92.0 406.0 Td (TCP/IP, DNS.) Tj ET
+BT /regularFont 11 Tf 92.0 388.0 Td (\267 ECMA International: Define el est\341ndar ECMAScript \(JavaScript\).) Tj ET
+BT /regularFont 11 Tf 72.0 370.0 Td (Est\341ndares fundamentales:) Tj ET
+BT /regularFont 11 Tf 92.0 352.0 Td (\267 HTML5: \332ltima versi\363n del lenguaje de marcado, incluye elementos sem\341nticos,) Tj ET
+BT /regularFont 11 Tf 92.0 338.0 Td (multimedia nativa, APIs de geolocalizaci\363n, almacenamiento local, Canvas, etc.) Tj ET
+BT /regularFont 11 Tf 92.0 320.0 Td (\267 CSS3: Hojas de estilo con animaciones, flexbox, grid, media queries para dise\361o) Tj ET
+BT /regularFont 11 Tf 92.0 306.0 Td (responsivo.) Tj ET
+BT /regularFont 11 Tf 92.0 288.0 Td (\267 ECMAScript \(ES6+\): Est\341ndar de JavaScript con m\363dulos, clases, promesas,) Tj ET
+BT /regularFont 11 Tf 92.0 274.0 Td (async/await.) Tj ET
+BT /regularFont 11 Tf 92.0 256.0 Td (\267 WAI-ARIA: Est\341ndares de accesibilidad web.) Tj ET
+BT /regularFont 11 Tf 72.0 238.0 Td (La importancia de seguir est\341ndares radica en garantizar la interoperabilidad,) Tj ET
+BT /regularFont 11 Tf 72.0 224.0 Td (accesibilidad, mantenibilidad y compatibilidad entre diferentes navegadores y) Tj ET
+BT /regularFont 11 Tf 72.0 210.0 Td (dispositivos.) Tj ET
+BT /boldFont 14 Tf 72.0 184.0 Td (4. Entornos de desarrollo para Aplicaciones Web) Tj ET
+BT /regularFont 11 Tf 72.0 166.0 Td (Un entorno de desarrollo web comprende las herramientas y tecnolog\355as necesarias para) Tj ET
+BT /regularFont 11 Tf 72.0 152.0 Td (crear, probar y desplegar aplicaciones web.) Tj ET
+BT /regularFont 11 Tf 72.0 134.0 Td (Componentes de un entorno de desarrollo:) Tj ET
+BT /regularFont 11 Tf 92.0 111.8 Td (Editor de c\363digo / IDE:) Tj ET
+BT /regularFont 11 Tf 112.0 93.8 Td (- Visual Studio Code \(el m\341s popular actualmente\)) Tj ET
+endstream
+endobj
+16 0 obj
+<< /Type /Page /Parent 2 0 R /MediaBox [0 0 612 792] /Contents 17 0 R /Resources << /Font << /regularFont 3 0 R /boldFont 4 0 R /italicFont 5 0 R >> >> >>
+endobj
+17 0 obj
+<< /Length 2509 >>
+stream
+BT /regularFont 11 Tf 112.0 750.0 Td (- WebStorm, Sublime Text, Atom) Tj ET
+BT /regularFont 11 Tf 112.0 732.0 Td (- Caracter\355sticas: resaltado de sintaxis, autocompletado, depuraci\363n,) Tj ET
+BT /regularFont 11 Tf 112.0 718.0 Td (extensiones.) Tj ET
+BT /regularFont 11 Tf 92.0 700.0 Td (Control de versiones:) Tj ET
+BT /regularFont 11 Tf 112.0 682.0 Td (- Git como sistema de control de versiones distribuido.) Tj ET
+BT /regularFont 11 Tf 112.0 664.0 Td (- Plataformas: GitHub, GitLab, Bitbucket.) Tj ET
+BT /regularFont 11 Tf 92.0 646.0 Td (Tecnolog\355as Frontend:) Tj ET
+BT /regularFont 11 Tf 112.0 628.0 Td (- HTML5, CSS3, JavaScript/TypeScript.) Tj ET
+BT /regularFont 11 Tf 112.0 610.0 Td (- Frameworks: React, Angular, Vue.js, Svelte.) Tj ET
+BT /regularFont 11 Tf 112.0 592.0 Td (- Preprocesadores CSS: Sass, Less.) Tj ET
+BT /regularFont 11 Tf 112.0 574.0 Td (- Empaquetadores: Webpack, Vite, Parcel.) Tj ET
+BT /regularFont 11 Tf 92.0 556.0 Td (Tecnolog\355as Backend:) Tj ET
+BT /regularFont 11 Tf 112.0 538.0 Td (- Node.js \(Express, Fastify\), Python \(Django, Flask\), PHP \(Laravel\), Java) Tj ET
+BT /regularFont 11 Tf 112.0 524.0 Td (\(Spring\), Ruby \(Rails\).) Tj ET
+BT /regularFont 11 Tf 112.0 506.0 Td (- Bases de datos: MySQL, PostgreSQL, MongoDB, Redis.) Tj ET
+BT /regularFont 11 Tf 92.0 488.0 Td (Herramientas de prueba:) Tj ET
+BT /regularFont 11 Tf 112.0 470.0 Td (- Unitarias: Jest, Mocha, Pytest.) Tj ET
+BT /regularFont 11 Tf 112.0 452.0 Td (- Integraci\363n: Cypress, Selenium, Playwright.) Tj ET
+BT /regularFont 11 Tf 92.0 434.0 Td (Herramientas de despliegue:) Tj ET
+BT /regularFont 11 Tf 112.0 416.0 Td (- Contenedores: Docker, Kubernetes.) Tj ET
+BT /regularFont 11 Tf 112.0 398.0 Td (- Servicios en la nube: AWS, Azure, Google Cloud.) Tj ET
+BT /regularFont 11 Tf 112.0 380.0 Td (- CI/CD: GitHub Actions, Jenkins, GitLab CI.) Tj ET
+BT /regularFont 11 Tf 92.0 362.0 Td (Herramientas del navegador:) Tj ET
+BT /regularFont 11 Tf 112.0 344.0 Td (- DevTools \(Chrome, Firefox\): inspector de elementos, consola, red, rendimiento.) Tj ET
+BT /regularFont 11 Tf 112.0 326.0 Td (- Extensiones: React DevTools, Vue DevTools, Lighthouse.) Tj ET
+BT /regularFont 11 Tf 72.0 308.0 Td (Metodolog\355as de desarrollo:) Tj ET
+BT /regularFont 11 Tf 92.0 290.0 Td (\267 Desarrollo \341gil \(Scrum, Kanban\).) Tj ET
+BT /regularFont 11 Tf 92.0 272.0 Td (\267 Integraci\363n y despliegue continuo \(CI/CD\).) Tj ET
+BT /regularFont 11 Tf 92.0 254.0 Td (\267 Desarrollo guiado por pruebas \(TDD\).) Tj ET
+endstream
+endobj
+18 0 obj
+<< /Type /Page /Parent 2 0 R /MediaBox [0 0 612 792] /Contents 19 0 R /Resources << /Font << /regularFont 3 0 R /boldFont 4 0 R /italicFont 5 0 R >> >> >>
+endobj
+19 0 obj
+<< /Length 2262 >>
+stream
+BT /boldFont 14 Tf 72.0 742.0 Td (5. Conclusiones) Tj ET
+BT /regularFont 11 Tf 72.0 717.0 Td (La Unidad 1 establece los fundamentos esenciales para comprender el desarrollo de) Tj ET
+BT /regularFont 11 Tf 72.0 703.0 Td (aplicaciones web modernas. Los puntos clave son:) Tj ET
+BT /regularFont 11 Tf 92.0 680.8 Td (1. La evoluci\363n de Internet y la WWW demuestra c\363mo las tecnolog\355as web han pasado) Tj ET
+BT /regularFont 11 Tf 92.0 666.8 Td (de ser simples sistemas de hipertexto a plataformas complejas de aplicaciones) Tj ET
+BT /regularFont 11 Tf 92.0 652.8 Td (interactivas.) Tj ET
+BT /regularFont 11 Tf 92.0 634.8 Td (2. La arquitectura Cliente/Servidor sigue siendo el modelo dominante en la web,) Tj ET
+BT /regularFont 11 Tf 92.0 620.8 Td (donde el navegador \(cliente\) y el servidor web interact\372an mediante protocolos bien) Tj ET
+BT /regularFont 11 Tf 92.0 606.8 Td (definidos.) Tj ET
+BT /regularFont 11 Tf 92.0 588.8 Td (3. El conocimiento de TCP/IP y HTTP es fundamental para entender c\363mo viajan los) Tj ET
+BT /regularFont 11 Tf 92.0 574.8 Td (datos en la red y c\363mo se comunican las aplicaciones web, lo cual es esencial para) Tj ET
+BT /regularFont 11 Tf 92.0 560.8 Td (la depuraci\363n y optimizaci\363n.) Tj ET
+BT /regularFont 11 Tf 92.0 542.8 Td (4. Los est\341ndares web garantizan la interoperabilidad y accesibilidad, siendo) Tj ET
+BT /regularFont 11 Tf 92.0 528.8 Td (responsabilidad del desarrollador seguirlos para crear aplicaciones compatibles y) Tj ET
+BT /regularFont 11 Tf 92.0 514.8 Td (mantenibles.) Tj ET
+BT /regularFont 11 Tf 92.0 496.8 Td (5. Los entornos de desarrollo modernos proporcionan un ecosistema rico de) Tj ET
+BT /regularFont 11 Tf 92.0 482.8 Td (herramientas que facilitan la productividad, desde editores inteligentes hasta) Tj ET
+BT /regularFont 11 Tf 92.0 468.8 Td (pipelines de despliegue automatizado.) Tj ET
+BT /regularFont 11 Tf 72.0 436.8 Td (Estos conceptos constituyen la base sobre la cual se construyen las competencias) Tj ET
+BT /regularFont 11 Tf 72.0 422.8 Td (necesarias para el desarrollo profesional de aplicaciones web, y su comprensi\363n permite) Tj ET
+BT /regularFont 11 Tf 72.0 408.8 Td (tomar decisiones informadas sobre tecnolog\355as y arquitecturas en proyectos reales.) Tj ET
+endstream
+endobj
+xref
+0 20
+0000000000 65535 f 
+0000000015 00000 n 
+0000000064 00000 n 
+0000000162 00000 n 
+0000000259 00000 n 
+0000000361 00000 n 
+0000000466 00000 n 
+0000000635 00000 n 
+0000001332 00000 n 
+0000001501 00000 n 
+0000002311 00000 n 
+0000002482 00000 n 
+0000006811 00000 n 
+0000006982 00000 n 
+0000011045 00000 n 
+0000011216 00000 n 
+0000015185 00000 n 
+0000015356 00000 n 
+0000017918 00000 n 
+0000018089 00000 n 
+trailer
+<< /Size 20 /Root 1 0 R >>
+startxref
+20404
+%%EOF

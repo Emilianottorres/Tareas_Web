@@ -1,0 +1,283 @@
+\documentclass[12pt,letterpaper]{article}
+\usepackage[utf8]{inputenc}
+\usepackage[spanish]{babel}
+\usepackage{graphicx}
+\usepackage{geometry}
+\usepackage{titlesec}
+\usepackage{hyperref}
+\usepackage{fancyhdr}
+\usepackage{enumitem}
+\usepackage{parskip}
+
+\geometry{top=2.5cm, bottom=2.5cm, left=2.5cm, right=2.5cm}
+
+\hypersetup{
+    colorlinks=true,
+    linkcolor=black,
+    urlcolor=blue
+}
+
+\begin{document}
+
+% ===================== PORTADA =====================
+\begin{titlepage}
+    \centering
+    
+    % Logos
+    \begin{minipage}{0.3\textwidth}
+        \raggedright
+        \includegraphics[width=3cm]{logo_ipn.png}
+    \end{minipage}
+    \hfill
+    \begin{minipage}{0.3\textwidth}
+        \raggedleft
+        \includegraphics[width=3cm]{logo_escom.png}
+    \end{minipage}
+    
+    \vspace{2cm}
+    
+    {\LARGE \textbf{RESUMEN UNIDAD 1}}
+    
+    \vspace{1.5cm}
+    
+    {\large \textbf{Tecnolog\'ias para Desarrollo de Aplicaciones Web}}
+    
+    \vspace{1.5cm}
+    
+    Torres Casas Emiliano
+    
+    \vspace{1.5cm}
+    
+    Resumen: Aspectos b\'asicos del desarrollo de aplicaciones web
+    
+    \vspace{1.5cm}
+    
+    Sandra Morales
+    
+    \vspace{1.5cm}
+    
+    27 de junio de 2026
+    
+\end{titlepage}
+
+% ===================== ÍNDICE =====================
+\tableofcontents
+\newpage
+
+% ===================== DESARROLLO =====================
+\section{Evoluci\'on hist\'orica de Internet y la WWW}
+
+Internet tiene sus or\'igenes en ARPANET, una red creada en 1969 por el Departamento de Defensa de los Estados Unidos con el fin de interconectar universidades e instituciones de investigaci\'on. El objetivo principal era crear una red descentralizada capaz de resistir fallos parciales.
+
+En 1983, se adopt\'o el protocolo TCP/IP como est\'andar de comunicaci\'on, lo que permiti\'o la interconexi\'on de redes heterog\'eneas y marc\'o el nacimiento formal de Internet tal como la conocemos.
+
+La World Wide Web (WWW) fue inventada por Tim Berners-Lee en 1989 en el CERN (Organizaci\'on Europea para la Investigaci\'on Nuclear). Su propuesta combinaba tres tecnolog\'ias fundamentales:
+\begin{itemize}
+    \item \textbf{HTML} (HyperText Markup Language): lenguaje de marcado para crear documentos.
+    \item \textbf{URI/URL} (Uniform Resource Identifier/Locator): sistema de direccionamiento \'unico.
+    \item \textbf{HTTP} (HyperText Transfer Protocol): protocolo de transferencia de hipertexto.
+\end{itemize}
+
+En 1991 se public\'o la primera p\'agina web, y en 1993 el navegador Mosaic populariz\'o el acceso gr\'afico a la Web. Desde entonces, la Web ha evolucionado desde p\'aginas est\'aticas (Web 1.0) hasta aplicaciones interactivas y colaborativas (Web 2.0), y actualmente hacia la Web sem\'antica e inteligente (Web 3.0).
+
+\section{La Internet y la WWW}
+
+\subsection{Arquitectura Cliente/Servidor}
+
+La arquitectura Cliente/Servidor es el modelo fundamental sobre el que operan las aplicaciones web. En este modelo:
+
+\begin{itemize}
+    \item \textbf{Cliente:} Es el programa (generalmente un navegador web) que realiza peticiones de recursos o servicios. El cliente inicia la comunicaci\'on y presenta la informaci\'on al usuario.
+    \item \textbf{Servidor:} Es el programa que espera y responde a las peticiones de los clientes. Proporciona recursos, procesa datos y ejecuta la l\'ogica de negocio.
+\end{itemize}
+
+\textbf{Caracter\'isticas principales:}
+\begin{enumerate}
+    \item El cliente inicia las solicitudes (requests).
+    \item El servidor est\'a en espera permanente de peticiones.
+    \item La comunicaci\'on es de tipo solicitud-respuesta.
+    \item Los roles son asim\'etricos: el cliente solicita y el servidor provee.
+    \item Es un modelo escalable: un servidor puede atender m\'ultiples clientes.
+\end{enumerate}
+
+En el contexto web, el navegador act\'ua como cliente, enviando peticiones HTTP al servidor web, el cual responde con documentos HTML, im\'agenes, datos JSON, entre otros recursos.
+
+\subsection{Protocolo TCP/IP}
+
+TCP/IP (Transmission Control Protocol / Internet Protocol) es la suite de protocolos que permite la comunicaci\'on en Internet. Se organiza en cuatro capas:
+
+\begin{enumerate}
+    \item \textbf{Capa de Acceso a Red:} Maneja la transmisi\'on f\'isica de datos (Ethernet, Wi-Fi).
+    \item \textbf{Capa de Internet (IP):} Se encarga del direccionamiento l\'ogico y el enrutamiento de paquetes. Cada dispositivo tiene una direcci\'on IP \'unica.
+    \item \textbf{Capa de Transporte (TCP/UDP):} 
+    \begin{itemize}
+        \item \textbf{TCP:} Orientado a conexi\'on, garantiza la entrega ordenada y sin errores de los datos. Utiliza el mecanismo de ``three-way handshake'' (SYN, SYN-ACK, ACK).
+        \item \textbf{UDP:} Sin conexi\'on, m\'as r\'apido pero sin garant\'ia de entrega.
+    \end{itemize}
+    \item \textbf{Capa de Aplicaci\'on:} Protocolos de alto nivel como HTTP, FTP, SMTP, DNS.
+\end{enumerate}
+
+Los conceptos clave incluyen:
+\begin{itemize}
+    \item \textbf{Direcci\'on IP:} Identificador num\'erico \'unico (IPv4: 32 bits, IPv6: 128 bits).
+    \item \textbf{Puerto:} N\'umero que identifica un servicio espec\'ifico (HTTP: 80, HTTPS: 443).
+    \item \textbf{DNS:} Sistema que traduce nombres de dominio a direcciones IP.
+\end{itemize}
+
+\subsection{Protocolo de Transferencia de Hipertexto (HTTP)}
+
+HTTP es el protocolo de la capa de aplicaci\'on que permite la comunicaci\'on entre clientes y servidores web. Es un protocolo sin estado (stateless), lo que significa que cada petici\'on es independiente.
+
+\textbf{Estructura de una petici\'on HTTP:}
+\begin{itemize}
+    \item L\'inea de petici\'on: m\'etodo + URI + versi\'on (ej: \texttt{GET /index.html HTTP/1.1})
+    \item Cabeceras (Headers): metadatos de la petici\'on.
+    \item Cuerpo (Body): datos enviados (en POST, PUT, etc.)
+\end{itemize}
+
+\textbf{M\'etodos HTTP principales:}
+\begin{itemize}
+    \item \textbf{GET:} Solicita un recurso (solo lectura).
+    \item \textbf{POST:} Env\'ia datos al servidor para crear un recurso.
+    \item \textbf{PUT:} Actualiza un recurso existente completamente.
+    \item \textbf{DELETE:} Elimina un recurso.
+    \item \textbf{PATCH:} Actualiza parcialmente un recurso.
+\end{itemize}
+
+\textbf{C\'odigos de respuesta HTTP:}
+\begin{itemize}
+    \item \textbf{1xx:} Informativo.
+    \item \textbf{2xx:} \'Exito (200 OK, 201 Created).
+    \item \textbf{3xx:} Redirecci\'on (301, 302).
+    \item \textbf{4xx:} Error del cliente (400 Bad Request, 404 Not Found).
+    \item \textbf{5xx:} Error del servidor (500 Internal Server Error).
+\end{itemize}
+
+\textbf{HTTPS} es la versi\'on segura de HTTP que utiliza cifrado TLS/SSL para proteger la comunicaci\'on.
+
+\subsection{Evoluci\'on de Navegadores Web}
+
+Los navegadores web han sido fundamentales en la evoluci\'on de las aplicaciones web:
+
+\begin{itemize}
+    \item \textbf{1990 - WorldWideWeb:} Primer navegador creado por Tim Berners-Lee, solo texto.
+    \item \textbf{1993 - Mosaic:} Primer navegador gr\'afico popular, desarrollado en NCSA.
+    \item \textbf{1994 - Netscape Navigator:} Domin\'o el mercado en los 90s.
+    \item \textbf{1995 - Internet Explorer:} Microsoft entr\'o al mercado, iniciando la ``Guerra de los Navegadores''.
+    \item \textbf{2004 - Mozilla Firefox:} Navegador de c\'odigo abierto que promovi\'o est\'andares web.
+    \item \textbf{2008 - Google Chrome:} Introdujo el motor V8 de JavaScript, revolucionando el rendimiento.
+    \item \textbf{2015 - Microsoft Edge:} Reemplazo de IE, posteriormente migrado a Chromium.
+\end{itemize}
+
+\textbf{Componentes principales de un navegador moderno:}
+\begin{enumerate}
+    \item Motor de renderizado (Blink, WebKit, Gecko).
+    \item Motor de JavaScript (V8, SpiderMonkey, JavaScriptCore).
+    \item Capa de red para peticiones HTTP.
+    \item Int\'erprete de HTML/CSS.
+    \item Herramientas de desarrollo integradas.
+\end{enumerate}
+
+\section{Est\'andares para la Web}
+
+Los est\'andares web son especificaciones t\'ecnicas que definen c\'omo deben funcionar las tecnolog\'ias web. Son desarrollados principalmente por:
+
+\begin{itemize}
+    \item \textbf{W3C} (World Wide Web Consortium): Fundado por Tim Berners-Lee, define est\'andares para HTML, CSS, XML, accesibilidad (WCAG), entre otros.
+    \item \textbf{WHATWG} (Web Hypertext Application Technology Working Group): Mantiene el est\'andar vivo de HTML (HTML Living Standard).
+    \item \textbf{IETF} (Internet Engineering Task Force): Define protocolos de Internet como HTTP, TCP/IP, DNS.
+    \item \textbf{ECMA International:} Define el est\'andar ECMAScript (JavaScript).
+\end{itemize}
+
+\textbf{Est\'andares fundamentales:}
+\begin{itemize}
+    \item \textbf{HTML5:} \'Ultima versi\'on del lenguaje de marcado, incluye elementos sem\'anticos, multimedia nativa, APIs de geolocalizaci\'on, almacenamiento local, Canvas, etc.
+    \item \textbf{CSS3:} Hojas de estilo con animaciones, flexbox, grid, media queries para dise\~no responsivo.
+    \item \textbf{ECMAScript (ES6+):} Est\'andar de JavaScript con m\'odulos, clases, promesas, async/await.
+    \item \textbf{WAI-ARIA:} Est\'andares de accesibilidad web.
+\end{itemize}
+
+La importancia de seguir est\'andares radica en garantizar la interoperabilidad, accesibilidad, mantenibilidad y compatibilidad entre diferentes navegadores y dispositivos.
+
+\section{Entornos de desarrollo para Aplicaciones Web}
+
+Un entorno de desarrollo web comprende las herramientas y tecnolog\'ias necesarias para crear, probar y desplegar aplicaciones web.
+
+\textbf{Componentes de un entorno de desarrollo:}
+
+\begin{enumerate}
+    \item \textbf{Editor de c\'odigo / IDE:}
+    \begin{itemize}
+        \item Visual Studio Code (el m\'as popular actualmente)
+        \item WebStorm, Sublime Text, Atom
+        \item Caracter\'isticas: resaltado de sintaxis, autocompletado, depuraci\'on, extensiones.
+    \end{itemize}
+    
+    \item \textbf{Control de versiones:}
+    \begin{itemize}
+        \item Git como sistema de control de versiones distribuido.
+        \item Plataformas: GitHub, GitLab, Bitbucket.
+    \end{itemize}
+    
+    \item \textbf{Tecnolog\'ias Frontend:}
+    \begin{itemize}
+        \item HTML5, CSS3, JavaScript/TypeScript.
+        \item Frameworks: React, Angular, Vue.js, Svelte.
+        \item Preprocesadores CSS: Sass, Less.
+        \item Empaquetadores: Webpack, Vite, Parcel.
+    \end{itemize}
+    
+    \item \textbf{Tecnolog\'ias Backend:}
+    \begin{itemize}
+        \item Node.js (Express, Fastify), Python (Django, Flask), PHP (Laravel), Java (Spring), Ruby (Rails).
+        \item Bases de datos: MySQL, PostgreSQL, MongoDB, Redis.
+    \end{itemize}
+    
+    \item \textbf{Herramientas de prueba:}
+    \begin{itemize}
+        \item Unitarias: Jest, Mocha, Pytest.
+        \item Integraci\'on: Cypress, Selenium, Playwright.
+    \end{itemize}
+    
+    \item \textbf{Herramientas de despliegue:}
+    \begin{itemize}
+        \item Contenedores: Docker, Kubernetes.
+        \item Servicios en la nube: AWS, Azure, Google Cloud.
+        \item CI/CD: GitHub Actions, Jenkins, GitLab CI.
+    \end{itemize}
+    
+    \item \textbf{Herramientas del navegador:}
+    \begin{itemize}
+        \item DevTools (Chrome, Firefox): inspector de elementos, consola, red, rendimiento.
+        \item Extensiones: React DevTools, Vue DevTools, Lighthouse.
+    \end{itemize}
+\end{enumerate}
+
+\textbf{Metodolog\'ias de desarrollo:}
+\begin{itemize}
+    \item Desarrollo \'agil (Scrum, Kanban).
+    \item Integraci\'on y despliegue continuo (CI/CD).
+    \item Desarrollo guiado por pruebas (TDD).
+\end{itemize}
+
+% ===================== CONCLUSIONES =====================
+\newpage
+\section{Conclusiones}
+
+La Unidad 1 establece los fundamentos esenciales para comprender el desarrollo de aplicaciones web modernas. Los puntos clave son:
+
+\begin{enumerate}
+    \item La evoluci\'on de Internet y la WWW demuestra c\'omo las tecnolog\'ias web han pasado de ser simples sistemas de hipertexto a plataformas complejas de aplicaciones interactivas.
+    
+    \item La arquitectura Cliente/Servidor sigue siendo el modelo dominante en la web, donde el navegador (cliente) y el servidor web interact\'uan mediante protocolos bien definidos.
+    
+    \item El conocimiento de TCP/IP y HTTP es fundamental para entender c\'omo viajan los datos en la red y c\'omo se comunican las aplicaciones web, lo cual es esencial para la depuraci\'on y optimizaci\'on.
+    
+    \item Los est\'andares web garantizan la interoperabilidad y accesibilidad, siendo responsabilidad del desarrollador seguirlos para crear aplicaciones compatibles y mantenibles.
+    
+    \item Los entornos de desarrollo modernos proporcionan un ecosistema rico de herramientas que facilitan la productividad, desde editores inteligentes hasta pipelines de despliegue automatizado.
+\end{enumerate}
+
+Estos conceptos constituyen la base sobre la cual se construyen las competencias necesarias para el desarrollo profesional de aplicaciones web, y su comprensi\'on permite tomar decisiones informadas sobre tecnolog\'ias y arquitecturas en proyectos reales.
+
+\end{document}
